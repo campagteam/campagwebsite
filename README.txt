@@ -1,5 +1,5 @@
 Camp AG Website by Bruno Garcia
-camp-ag.org
+campacademicgames.org
 
 
 # Summer Camp Website
@@ -28,6 +28,7 @@ This website was designed and developed to serve as an engaging and functional p
 
 Template is Spectral from HTML5up
 Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+
 
 
 
