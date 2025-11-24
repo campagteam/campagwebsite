@@ -2110,7 +2110,7 @@ input, select, textarea {
 
 		.image.left {
 			float: left;
-			margin: 0 2em 3em 0;
+			margin: 0 2em 2em 0;
 			top: 0.25em;
 		}
 
@@ -4099,6 +4099,7 @@ input, select, textarea {
 	body.is-mobile.landing #footer {
 		background-color: #1d242a;
 	}
+
 
 
 
