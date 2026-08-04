@@ -4107,3 +4107,251 @@ input, select, textarea {
 
 
 
+
+/* Press */
+
+	.press-intro {
+		margin: 0 0 3em 0;
+		max-width: 48em;
+	}
+
+		.press-intro p {
+			color: #4e4852;
+			font-size: 1.05em;
+			margin: 0;
+		}
+
+	.press-section {
+		margin: 0 0 4em 0;
+	}
+
+		.press-section:last-child {
+			margin-bottom: 0;
+		}
+
+		.press-section h3 {
+			color: #2e3842;
+			margin-bottom: 1.5em;
+		}
+
+	.press-featured {
+		display: grid;
+		grid-template-columns: minmax(18em, 0.95fr) minmax(20em, 1.05fr);
+	}
+
+	.press-grid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 1.5em;
+	}
+
+	.press-card {
+		background: #ffffff;
+		border: solid 1px rgba(0, 0, 0, 0.08);
+		border-radius: 0.6em;
+		box-shadow: 0 0.75em 2em rgba(0, 0, 0, 0.08);
+		color: #4e4852;
+		overflow: hidden;
+		transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+	}
+
+		.press-card:hover,
+		.press-card:focus-within {
+			border-color: rgba(237, 73, 73, 0.35);
+			box-shadow: 0 1em 2.4em rgba(0, 0, 0, 0.12);
+			transform: translateY(-0.2em);
+		}
+
+	.press-card__media {
+		aspect-ratio: 16 / 9;
+		background: #2e3842;
+		min-height: 12em;
+		overflow: hidden;
+	}
+
+		.press-featured .press-card__media {
+			aspect-ratio: auto;
+			height: 100%;
+			min-height: 22em;
+		}
+
+		.press-card__media img {
+			display: block;
+			height: 100%;
+			object-fit: cover;
+			width: 100%;
+		}
+
+	.press-card__media--icon {
+		align-items: center;
+		background: linear-gradient(135deg, #2e3842 0%, #21b2a6 100%);
+		color: #ffffff;
+		display: flex;
+		flex-direction: column;
+		gap: 0.85em;
+		justify-content: center;
+		padding: 2em;
+		text-align: center;
+	}
+
+		.press-card__media--icon .icon {
+			font-size: 2.7em;
+			line-height: 1;
+		}
+
+		.press-card__media--icon span:last-child {
+			font-size: 0.85em;
+			font-weight: 800;
+			letter-spacing: 0.18em;
+			text-transform: uppercase;
+		}
+
+	.press-card__content {
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+		padding: 1.75em;
+	}
+
+		.press-featured .press-card__content {
+			padding: 2.35em;
+		}
+
+	.press-card__type {
+		color: #ed4933;
+		font-size: 0.72em;
+		font-weight: 800;
+		letter-spacing: 0.225em;
+		margin: 0 0 0.75em 0;
+		text-transform: uppercase;
+	}
+
+	.press-card__publication {
+		color: #6f6872;
+		font-size: 0.88em;
+		font-weight: 600;
+		margin: 0 0 1em 0;
+	}
+
+	.press-card__title {
+		color: #2e3842;
+		font-size: 1em;
+		letter-spacing: 0.08em;
+		line-height: 1.45em;
+		margin: 0 0 1em 0;
+	}
+
+		.press-featured .press-card__title {
+			font-size: 1.25em;
+		}
+
+	.press-card__description {
+		color: #4e4852;
+		line-height: 1.65em;
+		margin: 0 0 1.5em 0;
+	}
+
+	.press-card__link {
+		align-self: flex-start;
+		margin-top: auto;
+		min-height: 3.2em;
+	}
+
+		.press-card__link .icon {
+			font-size: 0.85em;
+			margin-left: 0.45em;
+		}
+
+		.press-card__link:focus,
+		.press-card__link:focus-visible {
+			box-shadow: 0 0 0 0.2em rgba(237, 73, 73, 0.35);
+			outline: solid 2px #2e3842;
+			outline-offset: 3px;
+		}
+
+	.press-video p {
+		color: #4e4852;
+		margin-bottom: 1.5em;
+	}
+
+	.press-video__frame {
+		aspect-ratio: 16 / 9;
+		background: #2e3842;
+		border-radius: 0.6em;
+		box-shadow: 0 0.75em 2em rgba(0, 0, 0, 0.08);
+		overflow: hidden;
+		width: 100%;
+	}
+
+		.press-video__frame iframe {
+			border: 0;
+			display: block;
+			height: 100%;
+			width: 100%;
+		}
+
+	.screen-reader-text {
+		clip: rect(0 0 0 0);
+		clip-path: inset(50%);
+		height: 1px;
+		overflow: hidden;
+		position: absolute;
+		white-space: nowrap;
+		width: 1px;
+	}
+
+	@media screen and (max-width: 980px) {
+
+		.press-featured {
+			grid-template-columns: 1fr;
+		}
+
+			.press-featured .press-card__media {
+				aspect-ratio: 16 / 9;
+				height: auto;
+				min-height: 0;
+			}
+
+		.press-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+	}
+
+	@media screen and (max-width: 736px) {
+
+		.press-intro {
+			margin-bottom: 2em;
+		}
+
+		.press-section {
+			margin-bottom: 3em;
+		}
+
+			.press-section h3 {
+				margin-bottom: 1em;
+			}
+
+		.press-grid {
+			grid-template-columns: 1fr;
+			gap: 1.25em;
+		}
+
+		.press-card__content,
+		.press-featured .press-card__content {
+			padding: 1.35em;
+		}
+
+		.press-card__media {
+			min-height: 0;
+		}
+
+		.press-card__link {
+			align-self: stretch;
+			padding-left: 1em;
+			padding-right: 1em;
+			text-align: center;
+			width: 100%;
+		}
+
+	}
