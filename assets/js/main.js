@@ -50,6 +50,65 @@
 				offset: $header.outerHeight()
 			});
 
+
+	// About page hash navigation.
+		(function() {
+
+			var scrollTargets = ['history', 'team-members'],
+				reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+			function getTarget(hash) {
+
+				if (!hash)
+					return null;
+
+				var id = hash.charAt(0) === '#' ? hash.substring(1) : hash;
+
+				if (scrollTargets.indexOf(id) === -1)
+					return null;
+
+				return document.getElementById(id);
+
+			}
+
+			function scrollToTarget(target) {
+
+				if (!target)
+					return;
+
+				target.scrollIntoView({
+					behavior: reducedMotion ? 'auto' : 'smooth',
+					block: 'start'
+				});
+
+			}
+
+			$window.on('load', function() {
+				window.setTimeout(function() {
+					scrollToTarget(getTarget(window.location.hash));
+				}, 125);
+			});
+
+			$(document).on('click', 'a[href$="about-us.html#history"], a[href$="about-us.html#team-members"]', function(event) {
+
+				var url = new URL(this.href, window.location.href);
+
+				if (url.pathname !== window.location.pathname)
+					return;
+
+				var target = getTarget(url.hash);
+
+				if (!target)
+					return;
+
+				event.preventDefault();
+				history.pushState(null, '', url.hash);
+				scrollToTarget(target);
+
+			});
+
+		})();
+
 	// Menu.
 		$('#menu')
 			.append('<a href="#menu" class="close"></a>')

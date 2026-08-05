@@ -11,16 +11,16 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<!-- Favicon for most browsers -->
-    		<link rel="icon" href="images/favicon.ico" type="image/x-icon" />
+		<link rel="icon" href="images/favicon.ico" type="image/x-icon" />
 
-    		<!-- PNG Icons for different resolutions -->
-    		<link rel="icon" href="images/favicon-16x16.png" sizes="16x16" type="image/png" />
-    		<link rel="icon" href="images/favicon-32x32.png" sizes="32x32" type="image/png" />
-    		<link rel="icon" href="images/android-chrome-192x192.png" sizes="192x192" type="image/png" />
-    		<link rel="icon" href="images/android-chrome-512x512.png" sizes="512x512" type="image/png" />
-		
-    		<!-- Apple Touch Icon -->
-    		<link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+		<!-- PNG Icons for different resolutions -->
+		<link rel="icon" href="images/favicon-16x16.png" sizes="16x16" type="image/png" />
+		<link rel="icon" href="images/favicon-32x32.png" sizes="32x32" type="image/png" />
+		<link rel="icon" href="images/android-chrome-192x192.png" sizes="192x192" type="image/png" />
+		<link rel="icon" href="images/android-chrome-512x512.png" sizes="512x512" type="image/png" />
+
+		<!-- Apple Touch Icon -->
+		<link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
 	</head>
 	<body class="is-preload">
@@ -40,7 +40,15 @@
 											<li><a href="index.html">Home</a></li>
 											<li><a href="register.html">Register</a></li>
 											<li><a href="get-involved.html">Get Involved</a></li>
-											<li><a href="about-us.html">About Us</a></li>
+											<li><a href="about-us.html" class="active">About Us</a>
+												<ul class="sidebar-submenu" aria-label="About Us submenu">
+													<li class="sidebar-submenu__item"><a href="about-us.html#history">History</a></li>
+													<li class="sidebar-submenu__item"><a href="about-us.html#team-members">Team Members</a></li>
+													<li class="sidebar-submenu__item"><a href="press.html">Press</a></li>
+													<li class="sidebar-submenu__item"><a href="reviews.html">Reviews</a></li>
+												</ul>
+											</li>
+											<li><a class="sidebar-donate-link" href="donate.html"><span class="icon solid fa-heart" aria-hidden="true"></span> Donate</a></li>
 											<li><a href="faq.html">FAQs</a></li>
 										</ul>
 									</div>
@@ -52,24 +60,24 @@
 				<!-- Main -->
 					<article id="main">
 						<header>
-							<h2>About Camp AG</h2>
-							
+							<h1>About Camp AG</h1>
+
 						</header>
-						<section class="wrapper style5">
+						<section id="history" class="wrapper style5">
 							<div class="inner">
 
 								<section>
 
 									<!-- teaching picture-->
-									<h4><span class="image right"><img src="images/camp-pictures/IMG_5770.JPG" alt="" /></span>Our Mission</h4>
+									<h2><span class="image right"><img src="images/camp-pictures/IMG_5770.JPG" alt="" /></span>History</h2>
 									<p>Camp AG was created with the goal to bring a lesser known school club to those who didn't have it at their school. Many Academic Games players continue with the club through middle school and high school and it becomes a life long community for many players. Students often coach, leading to 9th graders all the way to college seniors helping teach the next generation. Since it is only at a few schools in Ann Arbor, we aim to introduce it to every corner of the city so that every kid can get the chance to try it out.</p>
-									
+
 									<!-- counselor team picture-->
-									<h4><span class="image left"><img src="images/camp-pictures/IMG_4489.JPG" alt="" /></span>Student Founded, Student Led</h4>
+									<h2><span class="image left"><img src="images/camp-pictures/IMG_4489.JPG" alt="" /></span>Student Founded, Student Led</h2>
 									<p>Camp AG was founded by high school students from all over Ann Arbor. Every member of staff voluntarily helped write the curriculum and teach campers. We are always looking for more volunteers to help the camp run through multiple weeks of summer. If you are interested in helping start the club at your local school, reach out! We will be there to help.</p>
 									<br>
 								</section>
-								
+
 
 
 							</div>
@@ -78,22 +86,22 @@
 							<div class="inner">
 								<header>
 									<h2>Thoughts from the Community</h2>
-									
+
 								</header>
 								<ul class="actions stacked">
-									
+
 									<li><a href="press.html" class="button fit">Press</a></li>
 									<li><a href="reviews.html" class="button fit">Reviews</a></li>
 								</ul>
-								
+
 							</div>
 						</section>
-						
 
-						<section id="three" class="wrapper style3 special">
+
+						<section id="team-members" class="wrapper style3 special">
 							<div class="inner">
 								<header class="major">
-									<h2>Our Board</h2>
+									<h2>Team Members</h2>
 									<p>Our board works behind the scenes constantly to make camp possible. Click on their profiles for more information.</p>
 								</header>
 								<ul class="features">
@@ -109,7 +117,7 @@
 									       		<p style="text-align: center;">Founder</p>
 										</a>
 									</li>
-									
+
 
 
 									<li>
@@ -124,8 +132,8 @@
 										</a>
 									</li>
 
-									
-									
+
+
 									<li>
 										<a href="member-pages/jayeun-lee.html" style="display: block; text-decoration: none; color: inherit;">
 											<div class="col-12">
@@ -219,7 +227,7 @@
 
 
 
-						<section id="three" class="wrapper style3 special">
+						<section class="wrapper style3 special">
 							<div class="inner">
 								<header class="major">
 									<h2>Our Members</h2>
@@ -229,73 +237,69 @@
 
 
 									<li>
-                                        <a href="member-pages/erin-yim.html" style="display: block; text-decoration: none; color: inherit;">
-                                            <div class="col-12">
-                                                        <span class="image fit">
-                                                            <img src="images/counselor-pictures/erinyim.JPG" alt="" style="display: block; margin: 0 auto;" />
-                                                        </span>
-                                                </div>
-                                                <h3 style="text-align: center;">Erin Yim</h3>
-                                                <p style="text-align: center;">Coach</p>
-                                        </a>
-                                    </li>
+<a href="member-pages/erin-yim.html" style="display: block; text-decoration: none; color: inherit;">
+<div class="col-12">
+<span class="image fit">
+<img src="images/counselor-pictures/erinyim.JPG" alt="" style="display: block; margin: 0 auto;" />
+</span>
+</div>
+<h3 style="text-align: center;">Erin Yim</h3>
+<p style="text-align: center;">Coach</p>
+</a>
+</li>
 
 									<li>
-                                        <a href="member-pages/chloe-kim.html" style="display: block; text-decoration: none; color: inherit;">
-                                            <div class="col-12">
-                                                        <span class="image fit">
-                                                            <img src="images/counselor-pictures/chloekim.jpeg" alt="" style="display: block; margin: 0 auto;" />
-                                                        </span>
-                                                </div>
-                                                <h3 style="text-align: center;">Chloe Kim</h3>
-                                                <p style="text-align: center;">Coach</p>
-                                        </a>
-                                    </li>
-
-
-
-									<li>
-                                        <a href="member-pages/allen-bai.html" style="display: block; text-decoration: none; color: inherit;">
-                                            <div class="col-12">
-                                                        <span class="image fit">
-                                                            <img src="images/counselor-pictures/allenbai.JPG" alt="" style="display: block; margin: 0 auto;" />
-                                                        </span>
-                                                </div>
-                                                <h3 style="text-align: center;">Allen Bai</h3>
-                                                <p style="text-align: center;">Coach</p>
-                                        </a>
-                                    </li>
+<a href="member-pages/chloe-kim.html" style="display: block; text-decoration: none; color: inherit;">
+<div class="col-12">
+<span class="image fit">
+<img src="images/counselor-pictures/chloekim.jpeg" alt="" style="display: block; margin: 0 auto;" />
+</span>
+</div>
+<h3 style="text-align: center;">Chloe Kim</h3>
+<p style="text-align: center;">Coach</p>
+</a>
+</li>
 
 
 
 									<li>
-                                        <a href="member-pages/andrew-long.html" style="display: block; text-decoration: none; color: inherit;">
-                                            <div class="col-12">
-                                                        <span class="image fit">
-                                                            <img src="images/counselor-pictures/andrewlong.jpg" alt="" style="display: block; margin: 0 auto;" />
-                                                        </span>
-                                                </div>
-                                                <h3 style="text-align: center;">Andrew Long</h3>
-                                                <p style="text-align: center;">Coach</p>
-                                        </a>
-                                    </li>
+<a href="member-pages/allen-bai.html" style="display: block; text-decoration: none; color: inherit;">
+<div class="col-12">
+<span class="image fit">
+<img src="images/counselor-pictures/allenbai.JPG" alt="" style="display: block; margin: 0 auto;" />
+</span>
+</div>
+<h3 style="text-align: center;">Allen Bai</h3>
+<p style="text-align: center;">Coach</p>
+</a>
+</li>
+
 
 
 									<li>
-                                        <a href="member-pages/jason-lu.html" style="display: block; text-decoration: none; color: inherit;">
-                                            <div class="col-12">
-                                                        <span class="image fit">
-                                                            <img src="images/counselor-pictures/jasonlu.jpeg" alt="" style="display: block; margin: 0 auto;" />
-                                                        </span>
-                                                </div>
-                                                <h3 style="text-align: center;">Jason Lu</h3>
-                                                <p style="text-align: center;">Coach</p>
-                                        </a>
-                                    </li>
-
-									
+<a href="member-pages/andrew-long.html" style="display: block; text-decoration: none; color: inherit;">
+<div class="col-12">
+<span class="image fit">
+<img src="images/counselor-pictures/andrewlong.jpg" alt="" style="display: block; margin: 0 auto;" />
+</span>
+</div>
+<h3 style="text-align: center;">Andrew Long</h3>
+<p style="text-align: center;">Coach</p>
+</a>
+</li>
 
 
+									<li>
+<a href="member-pages/jason-lu.html" style="display: block; text-decoration: none; color: inherit;">
+<div class="col-12">
+<span class="image fit">
+<img src="images/counselor-pictures/jasonlu.jpeg" alt="" style="display: block; margin: 0 auto;" />
+</span>
+</div>
+<h3 style="text-align: center;">Jason Lu</h3>
+<p style="text-align: center;">Coach</p>
+</a>
+</li>
 
 
 
@@ -305,9 +309,13 @@
 
 
 
-									
-									
-									
+
+
+
+
+
+
+
 								</ul>
 							</div>
 						</section>

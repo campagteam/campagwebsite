@@ -2341,15 +2341,15 @@ input, select, textarea {
 	    justify-content: space-between; /* Adjusts spacing between the two halves */
 	    align-items: flex-start; /* Aligns content to the top */
 	}
-	
+
 	.left-half, .right-half {
 	    width: 48%; /* Adjusts the width of the left and right halves */
 	}
-	
+
 	.left-half {
 	    margin-right: 2%; /* Adds some spacing between the two halves */
 	}
-	
+
 	.right-half {
 	    margin-left: 2%;
 	}
@@ -2365,7 +2365,7 @@ input, select, textarea {
 	    max-width: 100%;
 	    background: #000;
 	}
-	
+
 	.video-container iframe {
 	    position: absolute;
 	    top: 0;
@@ -2374,7 +2374,7 @@ input, select, textarea {
 	    height: 100%;
 	    border: 0;
 	}
-	
+
 
 
 	table {
@@ -3610,30 +3610,30 @@ input, select, textarea {
 	    color: #ffffff; /* White text */
 	    font-family: inherit; /* Using the Spectral font family */
 	}
-	
+
 	.faq-item {
 	    padding: 15px 0;
 	    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 	}
-	
+
 	.faq-question {
 		cursor: pointer;
-		
+
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 		color: #333;
-		
-		
-		
+
+
+
 		font-size: 1em;
 		    line-height: 1.5em;
-		    
+
 		    font-weight: 800;
 		    letter-spacing: 0.225em;
 		    text-transform: uppercase;
 	}
-	
+
 	.faq-answer {
 	    max-height: 0;
 	    overflow: hidden;
@@ -3644,16 +3644,16 @@ input, select, textarea {
 	    color: #444;
 	    font-family: "Open Sans", Helvetica, sans-serif; /* Consistent font for answers */
 	}
-	
+
 	.faq-icon {
 	    font-size: 1.5em;
 	    transition: transform 0.3s ease;
 	}
-	
+
 	.faq-item.active .faq-answer {
 	    max-height: 200px;
 	}
-	
+
 	.faq-item.active .faq-icon {
 	    transform: rotate(45deg);
 	}
@@ -3927,6 +3927,7 @@ input, select, textarea {
 		text-align: center;
 	}
 
+		#main > header h1,
 		#main > header h2 {
 			font-size: 1.75em;
 			margin: 0 0 0.5em 0;
@@ -4367,6 +4368,138 @@ input, select, textarea {
 			padding-right: 1em;
 			text-align: center;
 			width: 100%;
+		}
+
+	}
+
+/* Camp AG sidebar submenu and donation page additions */
+	#menu ul.sidebar-submenu {
+		margin: 0.65em 0 0.25em 0.75em;
+		padding: 0 0 0 0.75em;
+		border-left: solid 1px rgba(255, 255, 255, 0.35);
+	}
+
+		#menu ul.sidebar-submenu > li.sidebar-submenu__item {
+			border-top: 0;
+			margin: 0;
+			padding: 0;
+		}
+
+			#menu ul.sidebar-submenu > li.sidebar-submenu__item > a {
+				font-size: 0.7em;
+				letter-spacing: 0.16em;
+				line-height: 2.25em;
+				padding: 0.15em 0.25em;
+			}
+
+	#menu a:hover,
+	#menu a:focus,
+	#menu a.active {
+		color: #ffffff !important;
+		background: rgba(255, 255, 255, 0.12);
+	}
+
+	#menu a:focus-visible {
+		outline: solid 2px #ffffff;
+		outline-offset: 3px;
+	}
+
+	#menu .sidebar-donate-link {
+		border: solid 1px rgba(255, 255, 255, 0.55);
+		border-radius: 3px;
+		margin-top: 0.5em;
+		padding: 0.35em 0.75em;
+	}
+
+		#menu .sidebar-donate-link .icon {
+			margin-right: 0.45em;
+		}
+
+	#history,
+	#team-members {
+		scroll-margin-top: 5em;
+	}
+
+
+	.donation-panel {
+		align-items: center;
+		background: #ffffff;
+		border-radius: 4px;
+		box-shadow: 0 0.25em 1.5em rgba(0, 0, 0, 0.08);
+		display: flex;
+		gap: 3em;
+		margin: 0 auto;
+		max-width: 62em;
+		padding: 3em;
+	}
+
+	.donation-content,
+	.donation-qr {
+		flex: 1 1 0;
+	}
+
+	.donation-actions {
+		margin-top: 2em;
+	}
+
+		.donation-actions .button {
+			margin-bottom: 1.25em;
+		}
+
+	.donation-qr {
+		text-align: center;
+	}
+
+		.donation-qr a {
+			border-bottom: 0;
+			display: inline-block;
+		}
+
+		.donation-qr img {
+			background: #ffffff;
+			box-sizing: border-box;
+			display: block;
+			height: auto;
+			margin: 0 auto 1.25em auto;
+			max-width: min(100%, 20em);
+			padding: 1em;
+			width: min(100%, 20em);
+		}
+
+	@media screen and (max-width: 736px) {
+
+		#menu ul.sidebar-submenu {
+			margin-left: 0.5em;
+			padding-left: 0.65em;
+		}
+
+			#menu ul.sidebar-submenu > li.sidebar-submenu__item > a {
+				line-height: 2.75em;
+			}
+
+		#menu .sidebar-donate-link {
+			padding-bottom: 0;
+			padding-top: 0;
+		}
+
+		.donation-panel {
+			flex-direction: column;
+			gap: 2em;
+			padding: 2em 1.25em;
+		}
+
+		.donation-content,
+		.donation-qr {
+			width: 100%;
+		}
+
+		.donation-actions .button {
+			width: 100%;
+		}
+
+		.donation-qr img {
+			max-width: min(100%, 18em);
+			width: min(100%, 18em);
 		}
 
 	}
