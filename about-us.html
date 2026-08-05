@@ -21,6 +21,17 @@
 
 		<!-- Apple Touch Icon -->
 		<link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+		<script>
+			(function() {
+				var hash = window.location.hash;
+				if (hash === '#history' || hash === '#team-members') {
+					window.CampAGHashScrollStart = 0;
+					if ('scrollRestoration' in history)
+						history.scrollRestoration = 'manual';
+					window.scrollTo(0, 0);
+				}
+			})();
+		</script>
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
 	</head>
 	<body class="is-preload">

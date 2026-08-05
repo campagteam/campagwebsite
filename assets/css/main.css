@@ -4397,22 +4397,29 @@ input, select, textarea {
 				text-transform: uppercase;
 			}
 
-			#menu .sidebar-dropdown__toggle {
+			#menu .sidebar-dropdown .sidebar-dropdown__header > button.sidebar-dropdown__toggle {
 				-webkit-appearance: none;
 				appearance: none;
 				align-items: center;
-				background: transparent;
-				border: 0;
-				border-radius: 3px;
+				background: transparent !important;
+				border: 0 !important;
+				border-radius: 0;
+				box-shadow: none !important;
 				color: inherit;
 				cursor: pointer;
 				display: inline-flex;
 				flex: 0 0 auto;
-				height: 2.75em;
+				font-size: 0.8em;
+				height: 1.5em;
 				justify-content: center;
+				letter-spacing: normal;
 				line-height: 1;
-				padding: 0;
-				width: 2.75em;
+				margin: 0;
+				min-width: 0;
+				padding: 0.1em;
+				text-transform: none;
+				vertical-align: middle;
+				width: 1.5em;
 			}
 
 				#menu .sidebar-dropdown__chevron {
@@ -4468,11 +4475,17 @@ input, select, textarea {
 
 	#menu a:hover,
 	#menu a:focus,
-	#menu a.active,
-	#menu .sidebar-dropdown__toggle:hover,
-	#menu .sidebar-dropdown__toggle:focus {
+	#menu a.active {
 		color: #ffffff !important;
 		background: rgba(255, 255, 255, 0.12);
+	}
+
+	#menu .sidebar-dropdown .sidebar-dropdown__header > button.sidebar-dropdown__toggle:hover,
+	#menu .sidebar-dropdown .sidebar-dropdown__header > button.sidebar-dropdown__toggle:focus {
+		background: transparent !important;
+		border: 0 !important;
+		box-shadow: none !important;
+		color: #ffffff !important;
 	}
 
 	#menu a:focus-visible,
@@ -4483,7 +4496,7 @@ input, select, textarea {
 
 	#history,
 	#team-members {
-		scroll-margin-top: 4em;
+		scroll-margin-top: calc(3.5em + 12px);
 	}
 
 	@media (prefers-reduced-motion: reduce) {
