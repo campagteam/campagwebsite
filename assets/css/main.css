@@ -4432,24 +4432,33 @@ input, select, textarea {
 					width: 0.55em;
 				}
 
-	#menu ul.sidebar-submenu {
-		border-left: solid 1px rgba(255, 255, 255, 0.35);
-		margin: 0.25em 0 0 0.75em;
-		max-height: 0;
-		overflow: hidden;
+	#menu .sidebar-submenu-shell {
+		display: grid;
+		grid-template-rows: 0fr;
 		opacity: 0;
-		padding: 0 0 0 0.75em;
-		transform: translateY(-0.25em);
-		transition: max-height 0.22s ease, opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
+		pointer-events: none;
+		transform: translateY(-0.25rem);
+		transition: grid-template-rows 360ms ease, opacity 260ms ease, transform 360ms ease, visibility 0s linear 360ms;
 		visibility: hidden;
 	}
 
-	#menu .sidebar-dropdown:hover > .sidebar-submenu,
-	#menu .sidebar-dropdown:focus-within > .sidebar-submenu,
-	#menu .sidebar-dropdown.is-open > .sidebar-submenu {
-		max-height: 14em;
+	#menu ul.sidebar-submenu {
+		border-left: solid 1px rgba(255, 255, 255, 0.35);
+		margin: 0.25em 0 0 0.75em;
+		min-height: 0;
+		overflow: hidden;
+		padding: 0 0 0 0.75em;
+	}
+
+	#menu .sidebar-dropdown:hover > .sidebar-submenu-shell,
+	#menu .sidebar-dropdown:focus-within > .sidebar-submenu-shell,
+	#menu .sidebar-dropdown.is-open > .sidebar-submenu-shell,
+	#menu .sidebar-dropdown:has(.sidebar-dropdown__toggle[aria-expanded="true"]) > .sidebar-submenu-shell {
+		grid-template-rows: 1fr;
 		opacity: 1;
+		pointer-events: auto;
 		transform: translateY(0);
+		transition: grid-template-rows 360ms ease, opacity 260ms ease, transform 360ms ease, visibility 0s linear 0s;
 		visibility: visible;
 	}
 
@@ -4500,7 +4509,7 @@ input, select, textarea {
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		#menu ul.sidebar-submenu,
+		#menu .sidebar-submenu-shell,
 		#menu .sidebar-dropdown__chevron {
 			transition-duration: 0.01ms;
 		}
