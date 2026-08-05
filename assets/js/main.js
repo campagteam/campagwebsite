@@ -51,11 +51,94 @@
 			});
 
 
+	// Sidebar About Us dropdown.
+		(function() {
+
+			var $dropdowns = $('#menu .sidebar-dropdown');
+
+			if (!$dropdowns.length)
+				return;
+
+			function setDropdown($dropdown, open) {
+
+				var $toggle = $dropdown.find('.sidebar-dropdown__toggle').first(),
+					$links = $dropdown.find('.sidebar-submenu a');
+
+				$dropdown.toggleClass('is-open', open);
+				$toggle.attr('aria-expanded', open ? 'true' : 'false');
+				$links.attr('tabindex', open ? '0' : '-1');
+
+			}
+
+			function closeDropdowns() {
+
+				$dropdowns.each(function() {
+					setDropdown($(this), false);
+				});
+
+			}
+
+			$dropdowns.each(function() {
+
+				var $dropdown = $(this),
+					$toggle = $dropdown.find('.sidebar-dropdown__toggle').first(),
+					$submenu = $dropdown.find('.sidebar-submenu').first();
+
+				setDropdown($dropdown, false);
+
+				$toggle.on('click', function(event) {
+					event.preventDefault();
+					event.stopPropagation();
+					setDropdown($dropdown, !$dropdown.hasClass('is-open'));
+				});
+
+				$dropdown.on('focusin mouseenter', function() {
+					setDropdown($dropdown, true);
+				});
+
+				$dropdown.on('mouseleave', function() {
+					if (!$dropdown.is(':focus-within'))
+						setDropdown($dropdown, false);
+				});
+
+				$dropdown.on('focusout', function() {
+					window.setTimeout(function() {
+						if (!$dropdown.is(':focus-within'))
+							setDropdown($dropdown, false);
+					}, 0);
+				});
+
+				$submenu.on('click', 'a', function() {
+					setDropdown($dropdown, false);
+				});
+
+			});
+
+			$(document).on('click', function(event) {
+				if (!$(event.target).closest('#menu .sidebar-dropdown').length)
+					closeDropdowns();
+			});
+
+			$window.on('campag:closeDropdowns', closeDropdowns);
+
+			if (window.MutationObserver) {
+				new MutationObserver(function() {
+					if (!$body.hasClass('is-menu-visible'))
+						closeDropdowns();
+				}).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+			}
+
+		})();
+
 	// About page hash navigation.
 		(function() {
 
 			var scrollTargets = ['history', 'team-members'],
-				reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+				isAboutPage = /(^|\/)about-us\.html$/.test(window.location.pathname),
+				reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+			if (!isAboutPage)
+				return;
 
 			function getTarget(hash) {
 
@@ -71,21 +154,37 @@
 
 			}
 
-			function scrollToTarget(target) {
+			function getHeaderOffset() {
+
+				return $header.length ? Math.ceil($header.outerHeight()) : 0;
+
+			}
+
+			function scrollToTarget(target, replaceFocus) {
 
 				if (!target)
 					return;
 
-				target.scrollIntoView({
-					behavior: reducedMotion ? 'auto' : 'smooth',
-					block: 'start'
+				var top = target.getBoundingClientRect().top + window.pageYOffset - getHeaderOffset() - 8;
+
+				window.scrollTo({
+					top: Math.max(top, 0),
+					behavior: reducedMotionQuery.matches ? 'auto' : 'smooth'
 				});
+
+				if (replaceFocus) {
+					target.setAttribute('tabindex', '-1');
+					target.focus({ preventScroll: true });
+				}
 
 			}
 
+			if (getTarget(window.location.hash))
+				window.scrollTo(0, 0);
+
 			$window.on('load', function() {
 				window.setTimeout(function() {
-					scrollToTarget(getTarget(window.location.hash));
+					scrollToTarget(getTarget(window.location.hash), false);
 				}, 125);
 			});
 
@@ -102,12 +201,22 @@
 					return;
 
 				event.preventDefault();
-				history.pushState(null, '', url.hash);
-				scrollToTarget(target);
+				$window.trigger('campag:closeDropdowns');
+				$body.removeClass('is-menu-visible');
+
+				if (window.location.hash !== url.hash)
+					history.pushState(null, '', url.hash);
+
+				scrollToTarget(target, true);
 
 			});
 
+			$window.on('popstate hashchange', function() {
+				scrollToTarget(getTarget(window.location.hash), false);
+			});
+
 		})();
+
 
 	// Menu.
 		$('#menu')

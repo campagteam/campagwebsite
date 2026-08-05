@@ -4372,11 +4372,85 @@ input, select, textarea {
 
 	}
 
-/* Camp AG sidebar submenu and donation page additions */
+/* Camp AG sidebar dropdown, smooth-scroll offsets, and donation page additions */
+	#menu .sidebar-dropdown {
+		max-width: 100%;
+	}
+
+		#menu .sidebar-dropdown__header {
+			align-items: center;
+			display: flex;
+			gap: 0.35em;
+			justify-content: space-between;
+			max-width: 100%;
+		}
+
+			#menu .sidebar-dropdown__header > a {
+				border: 0;
+				color: inherit;
+				display: block;
+				flex: 1 1 auto;
+				font-size: 0.8em;
+				letter-spacing: 0.225em;
+				outline: 0;
+				text-decoration: none;
+				text-transform: uppercase;
+			}
+
+			#menu .sidebar-dropdown__toggle {
+				-webkit-appearance: none;
+				appearance: none;
+				align-items: center;
+				background: transparent;
+				border: 0;
+				border-radius: 3px;
+				color: inherit;
+				cursor: pointer;
+				display: inline-flex;
+				flex: 0 0 auto;
+				height: 2.75em;
+				justify-content: center;
+				line-height: 1;
+				padding: 0;
+				width: 2.75em;
+			}
+
+				#menu .sidebar-dropdown__chevron {
+					border-bottom: solid 2px currentColor;
+					border-right: solid 2px currentColor;
+					display: block;
+					height: 0.55em;
+					transform: rotate(45deg);
+					transition: transform 0.2s ease;
+					width: 0.55em;
+				}
+
 	#menu ul.sidebar-submenu {
-		margin: 0.65em 0 0.25em 0.75em;
-		padding: 0 0 0 0.75em;
 		border-left: solid 1px rgba(255, 255, 255, 0.35);
+		margin: 0.25em 0 0 0.75em;
+		max-height: 0;
+		overflow: hidden;
+		opacity: 0;
+		padding: 0 0 0 0.75em;
+		transform: translateY(-0.25em);
+		transition: max-height 0.22s ease, opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
+		visibility: hidden;
+	}
+
+	#menu .sidebar-dropdown:hover > .sidebar-submenu,
+	#menu .sidebar-dropdown:focus-within > .sidebar-submenu,
+	#menu .sidebar-dropdown.is-open > .sidebar-submenu {
+		max-height: 14em;
+		opacity: 1;
+		transform: translateY(0);
+		visibility: visible;
+	}
+
+	#menu .sidebar-dropdown:hover .sidebar-dropdown__chevron,
+	#menu .sidebar-dropdown:focus-within .sidebar-dropdown__chevron,
+	#menu .sidebar-dropdown.is-open .sidebar-dropdown__chevron,
+	#menu .sidebar-dropdown__toggle[aria-expanded="true"] .sidebar-dropdown__chevron {
+		transform: rotate(225deg);
 	}
 
 		#menu ul.sidebar-submenu > li.sidebar-submenu__item {
@@ -4394,30 +4468,29 @@ input, select, textarea {
 
 	#menu a:hover,
 	#menu a:focus,
-	#menu a.active {
+	#menu a.active,
+	#menu .sidebar-dropdown__toggle:hover,
+	#menu .sidebar-dropdown__toggle:focus {
 		color: #ffffff !important;
 		background: rgba(255, 255, 255, 0.12);
 	}
 
-	#menu a:focus-visible {
+	#menu a:focus-visible,
+	#menu .sidebar-dropdown__toggle:focus-visible {
 		outline: solid 2px #ffffff;
 		outline-offset: 3px;
 	}
 
-	#menu .sidebar-donate-link {
-		border: solid 1px rgba(255, 255, 255, 0.55);
-		border-radius: 3px;
-		margin-top: 0.5em;
-		padding: 0.35em 0.75em;
-	}
-
-		#menu .sidebar-donate-link .icon {
-			margin-right: 0.45em;
-		}
-
 	#history,
 	#team-members {
-		scroll-margin-top: 5em;
+		scroll-margin-top: 4em;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		#menu ul.sidebar-submenu,
+		#menu .sidebar-dropdown__chevron {
+			transition-duration: 0.01ms;
+		}
 	}
 
 
@@ -4468,6 +4541,10 @@ input, select, textarea {
 
 	@media screen and (max-width: 736px) {
 
+		#menu .sidebar-dropdown__header > a {
+			line-height: 3em;
+		}
+
 		#menu ul.sidebar-submenu {
 			margin-left: 0.5em;
 			padding-left: 0.65em;
@@ -4476,11 +4553,6 @@ input, select, textarea {
 			#menu ul.sidebar-submenu > li.sidebar-submenu__item > a {
 				line-height: 2.75em;
 			}
-
-		#menu .sidebar-donate-link {
-			padding-bottom: 0;
-			padding-top: 0;
-		}
 
 		.donation-panel {
 			flex-direction: column;
