@@ -6,25 +6,27 @@
 -->
 <html>
 	<head>
-		<title>Register - Camp AG</title>
+		<title>Donate - Camp AG</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
+
+		<!-- Favicon for most browsers -->
+		<link rel="icon" href="images/favicon.ico" type="image/x-icon" />
+
+		<!-- PNG Icons for different resolutions -->
+		<link rel="icon" href="images/favicon-16x16.png" sizes="16x16" type="image/png" />
+		<link rel="icon" href="images/favicon-32x32.png" sizes="32x32" type="image/png" />
+		<link rel="icon" href="images/android-chrome-192x192.png" sizes="192x192" type="image/png" />
+		<link rel="icon" href="images/android-chrome-512x512.png" sizes="512x512" type="image/png" />
+
+		<!-- Apple Touch Icon -->
+		<link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
-		<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-		<script type="text/javascript">
-		(function() {
-		emailjs.init("P9JL4E4XDqClwNuCi"); // Replace YOUR_USER_ID with your actual User ID
-		})();
-		</script>
-		<script src="script.js" defer></script>
-		<script src="https://www.google.com/recaptcha/api.js?render=6LdhZCUqAAAAAGzGfJoNHJSX9l0Ub7LbAx90hei2"></script>
-
-
-
-
 	</head>
-	<body class="is-preload">
+
+	<body class="is-preload donation-page">
 
 		<!-- Page Wrapper -->
 			<div id="page-wrapper">
@@ -49,7 +51,7 @@
 													<li class="sidebar-submenu__item"><a href="reviews.html">Reviews</a></li>
 												</ul>
 											</li>
-											<li><a class="sidebar-donate-link" href="donate.html"><span class="icon solid fa-heart" aria-hidden="true"></span> Donate</a></li>
+											<li><a class="sidebar-donate-link active" href="donate.html"><span class="icon solid fa-heart" aria-hidden="true"></span> Donate</a></li>
 											<li><a href="faq.html">FAQs</a></li>
 										</ul>
 									</div>
@@ -61,51 +63,28 @@
 				<!-- Main -->
 					<article id="main">
 						<header>
-							<h2>How to Register</h2>
-
+							<h1>Support Camp AG</h1>
+							<p>Your support helps Camp AG provide free Academic Games programming, materials, and learning opportunities for elementary students.</p>
 						</header>
 						<section class="wrapper style5">
 							<div class="inner">
-
-								<section>
-									<h4>Registration Information</h4>
-									<ul>
-										<li>Registration opens: March 1, 2025</li>
-										<li>Registration closes: April 1, 2025</li>
-										<li>Cost: Free</li>
-										<li>Campers are chosen by a <strong>lottery system</strong></li>
-									</ul>
-								<section>
-								<section>
-									<h4>Interest Form</h4>
-									<div id="notification" style="display:none;"></div>
-
-									<form method="post" action="#">
-									    <div class="row gtr-uniform">
-									        <div class="col-6 col-12-xsmall">
-									            <input type="text" name="demo-name" id="demo-name" placeholder="Name" />
-									        </div>
-									        <div class="col-6 col-12-xsmall">
-									            <input type="email" name="demo-email" id="demo-email" placeholder="Email" />
-									        </div>
-									        <div class="col-12">
-									            <textarea name="demo-message" id="demo-message" placeholder="Additional Information" rows="6"></textarea>
-									        </div>
-									        <div class="col-12">
-									            <ul class="actions">
-									                <li><input type="submit" value="Send Message" class="primary" onclick="sendMail(); return false;" /></li>
-									            </ul>
-									        </div>
-									    </div>
-									</form>
-
+								<section class="donation-panel" aria-labelledby="donation-heading">
+									<div class="donation-content">
+										<h2 id="donation-heading">Help keep Camp AG free and accessible</h2>
+										<p>Donations help Camp AG continue offering Academic Games programming, learning materials, and opportunities for elementary students to explore problem-solving, teamwork, and creative thinking.</p>
+										<div class="donation-actions">
+											<a class="button primary icon solid fa-heart" href="https://givebutter.com/camp-ag-2026-donations-sol02m" target="_blank" rel="noopener noreferrer" aria-label="Donate to Camp AG through Givebutter (opens in a new tab)">Donate on Givebutter</a>
+											<p>Prefer a text link? <a href="https://givebutter.com/camp-ag-2026-donations-sol02m" target="_blank" rel="noopener noreferrer" aria-label="Donate to Camp AG through Givebutter (opens in a new tab)">Open the Camp AG Givebutter donation page</a>.</p>
+										</div>
+									</div>
+									<div class="donation-qr" aria-labelledby="donation-qr-heading">
+										<h2 id="donation-qr-heading">Scan to donate</h2>
+										<a href="https://givebutter.com/camp-ag-2026-donations-sol02m" target="_blank" rel="noopener noreferrer" aria-label="Donate to Camp AG through Givebutter (opens in a new tab)">
+											<img src="images/camp-ag-donation-qr.png" alt="QR code linking to the Camp AG Givebutter donation page" />
+										</a>
+										<p>Scan this QR code with your phone camera to open the Camp AG donation page.</p>
+									</div>
 								</section>
-
-								<section>
-									<h4>More Questions?</h4>
-									<p>Email us at a2huron.academicgames@gmail.com</p>
-								</section>
-
 							</div>
 						</section>
 					</article>
@@ -116,6 +95,7 @@
 							<li><a href="https://x.com/annarborag" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
 							<li><a href="https://www.instagram.com/a2academicgames/" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
 							<li><a href="mailto:campag.team@gmail.com" class="icon solid fa-envelope"><span class="label">Email</span></a></li>
+
 						</ul>
 						<ul class="copyright">
 							<li>&copy; CAMP AG</li>
@@ -135,4 +115,3 @@
 
 	</body>
 </html>
-
