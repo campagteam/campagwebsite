@@ -70,7 +70,21 @@
 				$toggle.attr('aria-expanded', open ? 'true' : 'false');
 				$submenuShell.attr('aria-hidden', open ? 'false' : 'true');
 				$submenu.prop('hidden', false);
-				$links.attr('tabindex', open ? '0' : '-1');
+
+				$links.each(function() {
+					if (open) {
+						if ($(this).attr('data-campag-tabindex') !== undefined)
+							$(this).attr('tabindex', $(this).attr('data-campag-tabindex')).removeAttr('data-campag-tabindex');
+						else
+							$(this).removeAttr('tabindex');
+					}
+					else {
+						if ($(this).attr('tabindex') !== undefined && $(this).attr('data-campag-tabindex') === undefined)
+							$(this).attr('data-campag-tabindex', $(this).attr('tabindex'));
+						$(this).attr('tabindex', '-1');
+					}
+				});
+
 				if ($submenuShell.length && 'inert' in $submenuShell[0])
 					$submenuShell[0].inert = !open;
 
@@ -115,7 +129,9 @@
 				});
 
 				$submenu.on('click', 'a', function() {
-					setDropdown($dropdown, false);
+					window.setTimeout(function() {
+						setDropdown($dropdown, false);
+					}, 0);
 				});
 
 			});
@@ -146,9 +162,9 @@
 				headerGap = 12,
 				activeAnimation = null,
 				isProgrammaticHashChange = false,
-				initialHash = getSupportedHash(window.location.hash),
-				initialScrollStart = window.CampAGHashScrollStart || 0,
-				initialScrollStarted = false;
+				initialHash = getSupportedHash(window.campAgPendingSection || window.location.hash),
+				initialScrollStarted = false,
+				lastNavigationToken = 0;
 
 			if (!isAboutPage)
 				return;
@@ -311,13 +327,16 @@
 
 			}
 
-			function afterLayoutChange(callback) {
+			function afterLayoutChange(callback, options) {
+
+				options = options || {};
+				var delay = options.crossPage ? 75 : (reducedMotionQuery.matches ? 0 : 380);
 
 				window.setTimeout(function() {
 					window.requestAnimationFrame(function() {
 						window.requestAnimationFrame(callback);
 					});
-				}, reducedMotionQuery.matches ? 0 : 380);
+				}, delay);
 
 			}
 
@@ -330,25 +349,26 @@
 
 			}
 
-			if (initialHash)
-				window.scrollTo(0, initialScrollStart);
+			function runInitialScroll() {
 
-			$window.on('load', function() {
 				if (!initialHash || initialScrollStarted)
 					return;
 
 				initialScrollStarted = true;
-				window.scrollTo(0, initialScrollStart);
-				window.requestAnimationFrame(function() {
-					window.requestAnimationFrame(function() {
-						window.setTimeout(function() {
-							scrollForHash(initialHash, { startY: initialScrollStart });
-							if ('scrollRestoration' in history && window.CampAGPreviousScrollRestoration)
-								history.scrollRestoration = window.CampAGPreviousScrollRestoration;
-						}, 75);
-					});
-				});
-			});
+				window.scrollTo(0, 0);
+				history.replaceState(history.state, document.title, initialHash);
+				afterLayoutChange(function() {
+					scrollForHash(initialHash, { startY: 0 });
+					if ('scrollRestoration' in history && window.CampAGPreviousScrollRestoration)
+						history.scrollRestoration = window.CampAGPreviousScrollRestoration;
+				}, { crossPage: true });
+
+			}
+
+			if (initialHash)
+				window.scrollTo(0, 0);
+
+			$window.on('load', runInitialScroll);
 
 			$(document).on('click', 'a[href$="about-us.html#history"], a[href$="about-us.html#team-members"]', function(event) {
 
@@ -371,9 +391,11 @@
 					window.setTimeout(function() { isProgrammaticHashChange = false; }, 0);
 				}
 
+				var navigationToken = ++lastNavigationToken;
 				window.scrollTo(0, 0);
 				afterLayoutChange(function() {
-					animateToTarget(target, { startY: 0 });
+					if (navigationToken === lastNavigationToken)
+						animateToTarget(target, { startY: 0 });
 				});
 
 			});
@@ -384,9 +406,11 @@
 
 				var hash = getSupportedHash(window.location.hash);
 				if (hash) {
+					var navigationToken = ++lastNavigationToken;
 					window.scrollTo(0, 0);
 					afterLayoutChange(function() {
-						scrollForHash(hash, { startY: 0 });
+						if (navigationToken === lastNavigationToken)
+							scrollForHash(hash, { startY: 0 });
 					});
 				}
 			});
@@ -400,7 +424,7 @@
 			.appendTo($body)
 			.panel({
 				delay: 500,
-				hideOnClick: true,
+				hideOnClick: false,
 				hideOnSwipe: true,
 				resetScroll: true,
 				resetForms: true,
@@ -408,6 +432,16 @@
 				target: $body,
 				visibleClass: 'is-menu-visible'
 			});
+
+		$('#menu').on('click', 'a', function() {
+			var href = $(this).attr('href');
+
+			if (href && href !== '#' && href !== '#menu')
+				window.setTimeout(function() {
+					$body.removeClass('is-menu-visible');
+					$window.trigger('campag:closeDropdowns');
+				}, 0);
+		});
 
 	// Header.
 		if ($banner.length > 0
