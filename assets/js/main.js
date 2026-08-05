@@ -62,11 +62,17 @@
 			function setDropdown($dropdown, open) {
 
 				var $toggle = $dropdown.find('.sidebar-dropdown__toggle').first(),
+					$submenuShell = $dropdown.find('.sidebar-submenu-shell').first(),
+					$submenu = $dropdown.find('.sidebar-submenu').first(),
 					$links = $dropdown.find('.sidebar-submenu a');
 
 				$dropdown.toggleClass('is-open', open);
 				$toggle.attr('aria-expanded', open ? 'true' : 'false');
+				$submenuShell.attr('aria-hidden', open ? 'false' : 'true');
+				$submenu.prop('hidden', false);
 				$links.attr('tabindex', open ? '0' : '-1');
+				if ($submenuShell.length && 'inert' in $submenuShell[0])
+					$submenuShell[0].inert = !open;
 
 			}
 
@@ -136,7 +142,7 @@
 			var scrollTargetIds = ['history', 'team-members'],
 				isAboutPage = /(^|\/)about-us\.html$/.test(window.location.pathname),
 				reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)'),
-				scrollDuration = 900,
+				scrollDuration = 1200,
 				headerGap = 12,
 				activeAnimation = null,
 				isProgrammaticHashChange = false,
@@ -305,6 +311,16 @@
 
 			}
 
+			function afterLayoutChange(callback) {
+
+				window.setTimeout(function() {
+					window.requestAnimationFrame(function() {
+						window.requestAnimationFrame(callback);
+					});
+				}, reducedMotionQuery.matches ? 0 : 380);
+
+			}
+
 			function scrollForHash(hash, options) {
 
 				var target = getTarget(hash);
@@ -327,6 +343,8 @@
 					window.requestAnimationFrame(function() {
 						window.setTimeout(function() {
 							scrollForHash(initialHash, { startY: initialScrollStart });
+							if ('scrollRestoration' in history && window.CampAGPreviousScrollRestoration)
+								history.scrollRestoration = window.CampAGPreviousScrollRestoration;
 						}, 75);
 					});
 				});
@@ -353,17 +371,24 @@
 					window.setTimeout(function() { isProgrammaticHashChange = false; }, 0);
 				}
 
-				animateToTarget(target);
+				window.scrollTo(0, 0);
+				afterLayoutChange(function() {
+					animateToTarget(target, { startY: 0 });
+				});
 
 			});
 
-			$window.on('popstate hashchange', function() {
+			$window.on('popstate', function() {
 				if (isProgrammaticHashChange)
 					return;
 
 				var hash = getSupportedHash(window.location.hash);
-				if (hash)
-					scrollForHash(hash);
+				if (hash) {
+					window.scrollTo(0, 0);
+					afterLayoutChange(function() {
+						scrollForHash(hash, { startY: 0 });
+					});
+				}
 			});
 
 		})();
