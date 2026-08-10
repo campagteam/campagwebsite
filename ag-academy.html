@@ -6,7 +6,7 @@
 -->
 <html>
 	<head>
-		<title>Donate - Camp AG</title>
+		<title>AG Academy - Camp AG</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
@@ -26,7 +26,7 @@
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
 	</head>
 
-	<body class="is-preload donation-page">
+	<body class="is-preload">
 
 		<!-- Page Wrapper -->
 			<div id="page-wrapper">
@@ -49,16 +49,16 @@
 													<button class="sidebar-dropdown__toggle" type="button" aria-label="Toggle About Us submenu" aria-expanded="false" aria-controls="sidebar-about-submenu"><span class="sidebar-dropdown__chevron" aria-hidden="true"></span></button>
 												</div>
 												<div class="sidebar-submenu-shell">
-															<ul class="sidebar-submenu" id="sidebar-about-submenu" aria-label="About Us submenu">
-													<li class="sidebar-submenu__item"><a href="about-us.html#history">History</a></li>
-													<li class="sidebar-submenu__item"><a href="about-us.html#team-members">Team Members</a></li>
-													<li class="sidebar-submenu__item"><a href="press.html">Press</a></li>
-													<li class="sidebar-submenu__item"><a href="reviews.html">Reviews</a></li>
-												</ul>
-														</div>
+													<ul class="sidebar-submenu" id="sidebar-about-submenu" aria-label="About Us submenu">
+														<li class="sidebar-submenu__item"><a href="about-us.html#history">History</a></li>
+														<li class="sidebar-submenu__item"><a href="about-us.html#team-members">Team Members</a></li>
+														<li class="sidebar-submenu__item"><a href="press.html">Press</a></li>
+														<li class="sidebar-submenu__item"><a href="reviews.html">Reviews</a></li>
+													</ul>
+												</div>
 											</li>
-											<li><a href="ag-academy.html">AG Academy</a></li>
-											<li><a href="donate.html" class="active">Donate</a></li>
+											<li><a href="ag-academy.html" class="active">AG Academy</a></li>
+											<li><a href="donate.html">Donate</a></li>
 											<li><a href="faq.html">FAQs</a></li>
 										</ul>
 									</div>
@@ -70,26 +70,17 @@
 				<!-- Main -->
 					<article id="main">
 						<header>
-							<h1>Support Camp AG</h1>
+							<h1>AG Academy</h1>
 						</header>
 						<section class="wrapper style5">
 							<div class="inner">
-								<section class="donation-panel" aria-labelledby="donation-heading">
-									<div class="donation-content">
-										<h2 id="donation-heading">Help keep Camp AG free and accessible</h2>
-										<p>Donations help Camp AG continue offering Academic Games programming, learning materials, and opportunities for elementary students to explore problem-solving, teamwork, and creative thinking.</p>
-										<div class="donation-actions">
-											<a class="button primary icon solid fa-heart" href="https://givebutter.com/camp-ag-2026-donations-sol02m" target="_blank" rel="noopener noreferrer" aria-label="Donate to Camp AG through Givebutter (opens in a new tab)">Donate on Givebutter</a>
-											<p>Prefer a text link? <a href="https://givebutter.com/camp-ag-2026-donations-sol02m" target="_blank" rel="noopener noreferrer" aria-label="Donate to Camp AG through Givebutter (opens in a new tab)">Open the Camp AG Givebutter donation page</a>.</p>
-										</div>
-									</div>
-									<div class="donation-qr" aria-labelledby="donation-qr-heading">
-										<h2 id="donation-qr-heading">Scan to donate</h2>
-										<a href="https://givebutter.com/camp-ag-2026-donations-sol02m" target="_blank" rel="noopener noreferrer" aria-label="Donate to Camp AG through Givebutter (opens in a new tab)">
-											<img src="images/camp-ag-donation-qr.png" alt="QR code linking to the Camp AG Givebutter donation page" />
-										</a>
-										<p>Scan this QR code with your phone camera to open the Camp AG donation page.</p>
-									</div>
+								<section aria-labelledby="academy-heading">
+									<h2 id="academy-heading">Taking you to AG Academy&hellip;</h2>
+									<p>Continue learning with AG Academy, Camp AG&rsquo;s online platform for practicing Academic Games skills and exploring lessons beyond camp.</p>
+									<ul class="actions">
+										<li><a class="button primary" href="https://academicgamesacademy.org" target="_blank" rel="noopener noreferrer">Visit AG Academy</a></li>
+									</ul>
+									<p><small>If you are not redirected automatically, select &ldquo;Visit AG Academy.&rdquo;</small></p>
 								</section>
 							</div>
 						</section>
@@ -101,7 +92,6 @@
 							<li><a href="https://x.com/annarborag" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
 							<li><a href="https://www.instagram.com/a2academicgames/" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
 							<li><a href="mailto:campag.team@gmail.com" class="icon solid fa-envelope"><span class="label">Email</span></a></li>
-
 						</ul>
 						<ul class="copyright">
 							<li>&copy; CAMP AG</li>
@@ -118,6 +108,11 @@
 			<script src="assets/js/breakpoints.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
+			<script>
+				window.setTimeout(function() {
+					window.location.replace('https://academicgamesacademy.org');
+				}, 2000);
+			</script>
 
 	</body>
 </html>
