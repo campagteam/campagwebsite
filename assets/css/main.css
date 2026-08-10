@@ -4430,6 +4430,7 @@ input, select, textarea {
 					transform: rotate(45deg);
 					transition: transform 0.2s ease;
 					width: 0.55em;
+					pointer-events: none;
 				}
 
 	#menu .sidebar-submenu-shell {
@@ -4563,8 +4564,18 @@ input, select, textarea {
 
 	@media screen and (max-width: 736px) {
 
+		#menu .sidebar-dropdown__header {
+			min-height: 44px;
+		}
+
 		#menu .sidebar-dropdown__header > a {
 			line-height: 3em;
+		}
+
+		#menu .sidebar-dropdown .sidebar-dropdown__header > button.sidebar-dropdown__toggle {
+			height: 44px;
+			padding: 0;
+			width: 44px;
 		}
 
 		#menu ul.sidebar-submenu {
@@ -4573,7 +4584,22 @@ input, select, textarea {
 		}
 
 			#menu ul.sidebar-submenu > li.sidebar-submenu__item > a {
-				line-height: 2.75em;
+				align-items: center;
+				box-sizing: border-box;
+				display: flex;
+				line-height: 1.35;
+				min-height: 48px;
+				padding: 0.7em 0.75em;
+				width: 100%;
+			}
+
+			#menu ul.sidebar-submenu > li.sidebar-submenu__item + li.sidebar-submenu__item {
+				margin-top: 2px;
+			}
+
+			#menu ul.sidebar-submenu > li.sidebar-submenu__item > a:active {
+				background: rgba(255, 255, 255, 0.2);
+				color: #ffffff !important;
 			}
 
 		.donation-panel {
