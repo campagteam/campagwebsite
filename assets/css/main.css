@@ -4662,14 +4662,18 @@ input, select, textarea {
 .alumni-spotlights {
     background: #f5f2ec;
     isolation: isolate;
-    overflow: hidden;
-    padding: 6em 0 8em;
+    overflow: clip;
     position: relative;
 }
 
 .alumni-spotlights > .alumni-container {
     position: relative;
     z-index: 1;
+}
+
+.alumni-profile-list {
+    padding-bottom: 8em;
+    padding-top: 6em;
 }
 
 .alumni-profile-list:before {
@@ -4713,36 +4717,34 @@ input, select, textarea {
    SECTION-WIDE CLASS OF 2026 BACKGROUND
    ========================================= */
 
-.alumni-spotlights {
-    --alumni-parallax-y: 0px;
+.alumni-spotlights__backdrop {
+    height: 100vh;
+    margin-bottom: -100vh;
+    pointer-events: none;
+    position: sticky;
+    top: 0;
+    z-index: 0;
 }
 
-.alumni-spotlights:before,
-.alumni-spotlights:after {
+.alumni-spotlights__backdrop span {
     font-size: clamp(18em, 34vw, 35em);
     font-weight: 900;
     letter-spacing: -.09em;
     line-height: .7;
-    pointer-events: none;
     position: absolute;
-    transform: translate3d(0, var(--alumni-parallax-y), 0);
     white-space: nowrap;
-    will-change: transform;
-    z-index: 0;
 }
 
-.alumni-spotlights:before {
+.alumni-backdrop__20 {
     color: rgba(46, 56, 66, 0.07);
-    content: '20';
     left: -.18em;
-    top: 7%;
+    top: 22%;
 }
 
-.alumni-spotlights:after {
+.alumni-backdrop__26 {
     color: rgba(33, 178, 166, 0.07);
-    content: '26';
     right: -.16em;
-    top: 58%;
+    top: 45%;
 }
 
 /* Profiles form the foreground; the connecting line remains between them and
@@ -5073,8 +5075,7 @@ input, select, textarea {
     }
 
     /* Keep the section-wide composition restrained on tablet. */
-    .alumni-spotlights:before,
-    .alumni-spotlights:after {
+    .alumni-spotlights__backdrop span {
         font-size: clamp(15em, 30vw, 24em);
     }
 
@@ -5122,18 +5123,32 @@ input, select, textarea {
         padding-top: 4.25em;
     }
 
-    .alumni-spotlights {
+    .alumni-profile-list {
         padding-bottom: 5em;
         padding-top: 4.5em;
     }
 
-    /* Mobile keeps a static, quieter motif without scroll-linked motion. */
-    .alumni-spotlights:before,
-    .alumni-spotlights:after {
+    /* Mobile uses one static, quieter numeral to avoid sticky viewport quirks. */
+    .alumni-spotlights__backdrop {
+        bottom: 0;
+        height: auto;
+        left: 0;
+        margin-bottom: 0;
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+
+    .alumni-spotlights__backdrop span {
         font-size: 15em;
-        opacity: .65;
-        transform: none;
-        will-change: auto;
+    }
+
+    .alumni-backdrop__20 {
+        top: 2%;
+    }
+
+    .alumni-backdrop__26 {
+        display: none;
     }
 
     .alumni-introduction h2 {
@@ -5223,12 +5238,6 @@ input, select, textarea {
         opacity: 1;
         transform: none;
         transition: none;
-    }
-
-    .alumni-spotlights:before,
-    .alumni-spotlights:after {
-        transform: none;
-        will-change: auto;
     }
 
     .alumni-profile__portrait {
