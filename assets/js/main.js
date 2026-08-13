@@ -189,7 +189,7 @@
 
 			}
 
-			function scrollToSection(hash, start) {
+			function scrollToSection(hash, start, crossPage) {
 
 				var target = document.getElementById(hash.substring(1));
 
@@ -198,10 +198,24 @@
 
 				var headerHeight = $header.length ? $header.outerHeight() : 0,
 					teamHeader = hash === '#team-members' ? target.querySelector('header.major') : null,
-					targetAdjustment = teamHeader ? Math.min(90, Math.max(0, teamHeader.offsetHeight - 40)) : 0,
-					destination = Math.max(0, target.getBoundingClientRect().top + window.scrollY - headerHeight - 12 + targetAdjustment),
-					distance = destination - start,
-					duration = Math.min(2100, Math.max(900, 700 + Math.abs(distance) * 0.6)),
+					teamFeatures = hash === '#team-members' ? target.querySelector('.features') : null,
+					destination = Math.max(0, target.getBoundingClientRect().top + window.scrollY - headerHeight - 12);
+
+				if (teamHeader && teamFeatures) {
+					var teamHeaderTop = teamHeader.getBoundingClientRect().top + window.scrollY,
+						featuresTop = teamFeatures.getBoundingClientRect().top + window.scrollY,
+						usableViewportHeight = Math.max(0, window.innerHeight - headerHeight),
+						desiredFeaturesY = headerHeight + usableViewportHeight * 0.65,
+						minimumVisibleHeader = Math.min(80, teamHeader.offsetHeight * 0.6),
+						latestHeadingSafeDestination = teamHeaderTop + teamHeader.offsetHeight - headerHeight - minimumVisibleHeader;
+
+					destination = Math.max(0, Math.min(featuresTop - desiredFeaturesY, latestHeadingSafeDestination));
+				}
+
+				var distance = destination - start,
+					duration = crossPage ?
+						Math.min(3200, Math.max(1800, 1200 + Math.abs(distance) * 0.65)) :
+						Math.min(2800, Math.max(1000, 800 + Math.abs(distance) * 0.7)),
 					startTime = null;
 
 				cancelScroll();
@@ -227,7 +241,7 @@
 						startTime = timestamp;
 
 					var progress = Math.min((timestamp - startTime) / duration, 1),
-						eased = progress < 0.5 ? 4 * progress * progress * progress : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+						eased = -(Math.cos(Math.PI * progress) - 1) / 2;
 
 					window.scrollTo({ top: start + distance * eased, behavior: 'instant' });
 
@@ -259,7 +273,7 @@
 				if (isAboutPage && url.pathname === window.location.pathname) {
 					if (window.location.hash !== url.hash)
 						history.pushState(null, '', url.hash);
-					scrollToSection(url.hash, window.scrollY);
+					scrollToSection(url.hash, window.scrollY, false);
 				}
 				else {
 					sessionStorage.setItem(storageKey, url.hash.substring(1));
@@ -276,7 +290,7 @@
 					var pendingHash = '#' + pendingSection,
 						startPendingScroll = function() {
 							history.replaceState(history.state, '', pendingHash);
-							scrollToSection(pendingHash, 0);
+							scrollToSection(pendingHash, 0, true);
 						};
 
 					if ($body.hasClass('is-preload'))
