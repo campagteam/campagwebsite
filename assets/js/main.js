@@ -420,7 +420,7 @@
 
 	// Menu.
 		$('#menu')
-			.append('<a href="#menu" class="close" aria-label="Close menu"></a>')
+			.append('<a href="#menu" class="close"></a>')
 			.appendTo($body)
 			.panel({
 				delay: 500,
@@ -441,32 +441,7 @@
 					$body.removeClass('is-menu-visible');
 					$window.trigger('campag:closeDropdowns');
 				}, 0);
-			});
-
-	// Restrained, progressive-enhancement reveal for major content groups.
-		(function() {
-
-			var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)'),
-				$revealItems = $('.interior-page .wrapper > .inner, .interior-page .press-section, .interior-page .features > li, .landing #one .major, .landing .spotlight, .landing #three .major');
-
-			if (!$revealItems.length || reducedMotion.matches || !('IntersectionObserver' in window))
-				return;
-
-			$body.addClass('reveal-ready');
-			$revealItems.addClass('camp-reveal');
-
-			var observer = new IntersectionObserver(function(entries) {
-				entries.forEach(function(entry) {
-					if (entry.isIntersecting) {
-						entry.target.classList.add('is-revealed');
-						observer.unobserve(entry.target);
-					}
-				});
-			}, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
-
-			$revealItems.each(function() { observer.observe(this); });
-
-		})();
+		});
 
 	// Header.
 		if ($banner.length > 0
