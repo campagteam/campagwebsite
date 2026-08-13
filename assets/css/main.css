@@ -4526,13 +4526,26 @@ input, select, textarea {
 		will-change: auto;
 	}
 
+	.campag-load-reveal-enabled .campag-load-reveal {
+		opacity: 0;
+		transform: translateY(8px);
+		transition: opacity 400ms ease-out, transform 400ms ease-out;
+	}
+
+	.campag-load-reveal-enabled .campag-load-reveal.is-visible {
+		opacity: 1;
+		transform: translateY(0);
+	}
+
 	@media (prefers-reduced-motion: reduce) {
 		html {
 			scroll-behavior: auto;
 		}
 
 		.campag-reveal-enabled .campag-reveal,
-		.campag-reveal-enabled .campag-reveal.is-visible {
+		.campag-reveal-enabled .campag-reveal.is-visible,
+		.campag-load-reveal-enabled .campag-load-reveal,
+		.campag-load-reveal-enabled .campag-load-reveal.is-visible {
 			opacity: 1;
 			transform: none;
 			transition: none;

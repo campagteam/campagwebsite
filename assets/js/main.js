@@ -152,6 +152,71 @@
 
 		})();
 
+	// Controlled same-page scrolling for the About Us section links.
+		(function() {
+
+			if (!/(^|\/)about-us\.html$/.test(window.location.pathname))
+				return;
+
+			var duration = 850,
+				reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)'),
+				activeFrame = null;
+
+			$(document).on('click', 'a[href$="about-us.html#history"], a[href$="about-us.html#team-members"]', function(event) {
+
+				var url = new URL(this.href, window.location.href);
+
+				if (url.pathname !== window.location.pathname)
+					return;
+
+				var target = document.getElementById(url.hash.substring(1));
+
+				if (!target)
+					return;
+
+				event.preventDefault();
+				$body.removeClass('is-menu-visible');
+				$window.trigger('campag:closeDropdowns');
+				if (window.location.hash !== url.hash)
+					history.pushState(null, '', url.hash);
+
+				var start = window.scrollY,
+					headerHeight = $header.length ? $header.outerHeight() : 0,
+					destination = Math.max(0, target.getBoundingClientRect().top + start - headerHeight - 12),
+					distance = destination - start,
+					startTime = null;
+
+				if (activeFrame)
+					window.cancelAnimationFrame(activeFrame);
+
+				if (reducedMotion.matches) {
+					window.scrollTo({ top: destination, behavior: 'instant' });
+					return;
+				}
+
+				function step(timestamp) {
+
+					if (startTime === null)
+						startTime = timestamp;
+
+					var progress = Math.min((timestamp - startTime) / duration, 1),
+						eased = progress < 0.5 ? 4 * progress * progress * progress : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+					window.scrollTo({ top: start + distance * eased, behavior: 'instant' });
+
+					if (progress < 1)
+						activeFrame = window.requestAnimationFrame(step);
+					else
+						activeFrame = null;
+
+				}
+
+				activeFrame = window.requestAnimationFrame(step);
+
+			});
+
+		})();
+
 	// Subtle, one-time reveals for standard content pages.
 		(function() {
 
@@ -161,15 +226,11 @@
 
 			var page = window.location.pathname.split('/').pop() || 'index.html',
 				selectorsByPage = {
-					'about-us.html': ['#history .inner > section > *', '#cta .inner', '#team-members header.major', '#team-members .features > li', '#team-members + .wrapper header.major', '#team-members + .wrapper .features > li'],
-					'press.html': ['.press-section > h2', '.press-card', '.press-video'],
+					'about-us.html': ['#history .inner > section > *', '#cta .inner', '#team-members header.major', '#team-members .features', '#team-members + .wrapper header.major', '#team-members + .wrapper .features'],
+					'press.html': ['.press-section:not(.press-video) > h3', '.press-section > .press-card', '.press-grid', '.press-video'],
 					'reviews.html': ['#three header.major', '#three .features > li'],
-					'donate.html': ['.donation-content', '.donation-qr'],
-					'ag-academy.html': ['#main .wrapper.style5 .inner > *', '#main .wrapper.style3 .inner'],
-					'get-involved.html': ['.flex-container > *', '#three .inner'],
-					'register.html': ['#main .wrapper.style5 .inner > section'],
-					'waitlist.html': ['#main .wrapper.style5 .inner > section'],
-					'faq.html': ['#faq header.major', '.faq-item']
+					'get-involved.html': ['#three .inner'],
+					'waitlist.html': ['#main .wrapper.style5 .inner > section']
 				},
 				selectors = selectorsByPage[page];
 
@@ -191,14 +252,48 @@
 				});
 			}, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
 
-			elements.forEach(function(element, index) {
+			var initialViewportLimit = window.innerHeight * 0.9;
+
+			elements.forEach(function(element) {
 				element.classList.add('campag-reveal');
-				element.style.setProperty('--campag-reveal-delay', (index % 3) * 70 + 'ms');
-				observer.observe(element);
+
+				if (element.getBoundingClientRect().top <= initialViewportLimit)
+					element.classList.add('is-visible');
+				else
+					observer.observe(element);
 			});
 
 			// Enable the hidden state only after every element has an active observer.
 			document.documentElement.classList.add('campag-reveal-enabled');
+
+		})();
+
+	// One cohesive load reveal for short-page and initial interactive content.
+		(function() {
+
+			if (window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+				return;
+
+			var page = window.location.pathname.split('/').pop() || 'index.html',
+				selectorsByPage = {
+					'ag-academy.html': '#main .wrapper.style5 .inner > section',
+					'donate.html': '.donation-panel',
+					'get-involved.html': '.flex-container'
+				},
+				selector = selectorsByPage[page],
+				element = selector ? document.querySelector(selector) : null;
+
+			if (!element)
+				return;
+
+			element.classList.add('campag-load-reveal');
+			document.documentElement.classList.add('campag-load-reveal-enabled');
+
+			window.requestAnimationFrame(function() {
+				window.requestAnimationFrame(function() {
+					element.classList.add('is-visible');
+				});
+			});
 
 		})();
 
