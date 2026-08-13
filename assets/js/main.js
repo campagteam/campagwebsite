@@ -332,11 +332,18 @@
 
 			}
 
-			$(document).on('click', 'a[href$="about-us.html#history"], a[href$="about-us.html#team-members"]', function(event) {
+			document.addEventListener('click', function(event) {
 
-				var url = new URL(this.href, window.location.href);
+				var anchor = event.target.closest && event.target.closest('a');
 
-				if (url.origin !== window.location.origin)
+				if (!anchor)
+					return;
+
+				var url = new URL(anchor.href, window.location.href),
+					isAboutDestination = /\/about-us\.html$/.test(url.pathname),
+					isSupportedSection = url.hash === '#history' || url.hash === '#team-members';
+
+				if (url.origin !== window.location.origin || !isAboutDestination || !isSupportedSection)
 					return;
 
 				event.preventDefault();
@@ -360,7 +367,7 @@
 					window.location.assign(url.href.split('#')[0]);
 				}
 
-			});
+			}, true);
 
 			if (isAboutPage) {
 				var pendingSection = sessionStorage.getItem(storageKey);
