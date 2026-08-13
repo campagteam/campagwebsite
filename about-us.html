@@ -21,20 +21,6 @@
 
 		<!-- Apple Touch Icon -->
 		<link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
-		<script>
-			(function() {
-				var hash = window.location.hash;
-				if (hash === '#history' || hash === '#team-members') {
-					window.campAgPendingSection = hash.substring(1);
-					if ('scrollRestoration' in history) {
-						window.CampAGPreviousScrollRestoration = history.scrollRestoration;
-						history.scrollRestoration = 'manual';
-					}
-					history.replaceState(history.state, document.title, window.location.pathname + window.location.search);
-					window.scrollTo(0, 0);
-				}
-			})();
-		</script>
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
 	</head>
 	<body class="is-preload">

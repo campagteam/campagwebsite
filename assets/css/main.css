@@ -4504,12 +4504,53 @@ input, select, textarea {
 		outline-offset: 3px;
 	}
 
+	html {
+		scroll-behavior: smooth;
+	}
+
 	#history,
 	#team-members {
 		scroll-margin-top: calc(3.5em + 12px);
 	}
 
+	.campag-reveal-enabled .campag-reveal {
+		opacity: 0;
+		transform: translateY(12px);
+		transition: opacity 500ms ease-out var(--campag-reveal-delay, 0ms), transform 500ms ease-out var(--campag-reveal-delay, 0ms);
+		will-change: opacity, transform;
+	}
+
+	.campag-reveal-enabled .campag-reveal.is-visible {
+		opacity: 1;
+		transform: translateY(0);
+		will-change: auto;
+	}
+
+	.campag-load-reveal-enabled .campag-load-reveal {
+		opacity: 0;
+		transform: translateY(12px);
+		transition: opacity 500ms ease-out, transform 500ms ease-out;
+	}
+
+	.campag-load-reveal-enabled .campag-load-reveal.is-visible {
+		opacity: 1;
+		transform: translateY(0);
+	}
+
 	@media (prefers-reduced-motion: reduce) {
+		html {
+			scroll-behavior: auto;
+		}
+
+		.campag-reveal-enabled .campag-reveal,
+		.campag-reveal-enabled .campag-reveal.is-visible,
+		.campag-load-reveal-enabled .campag-load-reveal,
+		.campag-load-reveal-enabled .campag-load-reveal.is-visible {
+			opacity: 1;
+			transform: none;
+			transition: none;
+		}
+
 		#menu .sidebar-submenu-shell,
 		#menu .sidebar-dropdown__chevron {
 			transition-duration: 0.01ms;

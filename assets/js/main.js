@@ -25,6 +25,7 @@
 		$window.on('load', function() {
 			window.setTimeout(function() {
 				$body.removeClass('is-preload');
+				$window.trigger('campag:preloadComplete');
 			}, 100);
 		});
 
@@ -152,268 +153,259 @@
 
 		})();
 
-	// About page hash navigation.
+	// Controlled navigation for the About Us section links.
 		(function() {
 
-			var scrollTargetIds = ['history', 'team-members'],
+			var storageKey = 'campagPendingAboutSection',
 				isAboutPage = /(^|\/)about-us\.html$/.test(window.location.pathname),
-				reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)'),
-				scrollDuration = 1200,
-				headerGap = 12,
-				activeAnimation = null,
-				isProgrammaticHashChange = false,
-				initialHash = getSupportedHash(window.campAgPendingSection || window.location.hash),
-				initialScrollStarted = false,
-				lastNavigationToken = 0;
+				reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)'),
+				activeFrame = null,
+				interruptEvents = ['wheel', 'touchstart', 'pointerdown'],
+				scrollKeys = ['PageUp', 'PageDown', 'ArrowUp', 'ArrowDown', 'Home', 'End', ' '];
 
-			if (!isAboutPage)
-				return;
+			function cancelScroll() {
 
-			function getSupportedHash(hash) {
-
-				if (!hash)
-					return null;
-
-				var id = hash.charAt(0) === '#' ? hash.substring(1) : hash;
-
-				return scrollTargetIds.indexOf(id) === -1 ? null : '#' + id;
+				if (activeFrame)
+					window.cancelAnimationFrame(activeFrame);
+				activeFrame = null;
+				interruptEvents.forEach(function(type) {
+					window.removeEventListener(type, cancelOnInteraction);
+				});
+				window.removeEventListener('keydown', cancelOnScrollKey);
 
 			}
 
-			function getTarget(hash) {
+			function cancelOnInteraction(event) {
 
-				var supportedHash = getSupportedHash(hash);
-
-				return supportedHash ? document.getElementById(supportedHash.substring(1)) : null;
+				cancelScroll(event.type);
 
 			}
 
-			function getHeaderOffset() {
+			function cancelOnScrollKey(event) {
 
-				if (!$header.length)
-					return 0;
-
-				var rect = $header[0].getBoundingClientRect(),
-					style = window.getComputedStyle($header[0]),
-					isVisible = rect.height > 0 && style.display !== 'none' && style.visibility !== 'hidden',
-					isFixed = style.position === 'fixed' || style.position === 'sticky';
-
-				return isVisible && isFixed ? Math.ceil(rect.height) : 0;
+				if (scrollKeys.indexOf(event.key) !== -1)
+					cancelScroll('keydown:' + event.key);
 
 			}
 
-			function getMaxScrollY() {
+			function revealTeamMembers() {
 
-				return Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-
-			}
-
-			function getDestination(target) {
-
-				var rawTop = target.getBoundingClientRect().top + window.scrollY - getHeaderOffset() - headerGap;
-
-				return Math.min(Math.max(0, rawTop), getMaxScrollY());
+				$('#team-members header.major, #team-members .features').addClass('is-visible');
+				$window.trigger('campag:teamMembersVisible');
 
 			}
 
-			function easeInOutCubic(progress) {
+			function scrollToSection(hash, start, crossPage) {
 
-				return progress < 0.5 ? 4 * progress * progress * progress : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-
-			}
-
-			function cancelActiveAnimation() {
-
-				if (activeAnimation)
-					activeAnimation.cancel();
-
-			}
-
-			function animateToTarget(target, options) {
+				var target = document.getElementById(hash.substring(1));
 
 				if (!target)
 					return;
 
-				options = options || {};
-				cancelActiveAnimation();
+				var headerHeight = $header.length ? $header.outerHeight() : 0,
+					teamHeader = hash === '#team-members' ? target.querySelector('header.major') : null,
+					teamFeatures = hash === '#team-members' ? target.querySelector('.features') : null,
+					destination = Math.max(0, target.getBoundingClientRect().top + window.scrollY - headerHeight - 12);
 
-				var destination = getDestination(target),
-					start = typeof options.startY === 'number' ? options.startY : window.scrollY,
-					distance = destination - start,
-					cancelled = false,
-					frame = null,
-					interruptEvents = ['wheel', 'touchstart', 'pointerdown'],
-					scrollKeys = ['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End', ' '];
+				if (teamHeader && teamFeatures) {
+					var teamHeaderTop = teamHeader.getBoundingClientRect().top + window.scrollY,
+						featuresTop = teamFeatures.getBoundingClientRect().top + window.scrollY,
+						usableViewportHeight = Math.max(0, window.innerHeight - headerHeight),
+						desiredFeaturesY = headerHeight + usableViewportHeight * 0.65,
+						minimumVisibleHeader = Math.min(80, teamHeader.offsetHeight * 0.6),
+						latestHeadingSafeDestination = teamHeaderTop + teamHeader.offsetHeight - headerHeight - minimumVisibleHeader;
 
-				function cleanup() {
-
-					interruptEvents.forEach(function(type) {
-						window.removeEventListener(type, onInterrupt, { passive: true });
-					});
-					window.removeEventListener('keydown', onKeydown);
-					if (frame)
-						window.cancelAnimationFrame(frame);
-					if (activeAnimation && activeAnimation.cancel === cancel)
-						activeAnimation = null;
-
+					destination = Math.max(0, Math.min(featuresTop - desiredFeaturesY, latestHeadingSafeDestination));
 				}
 
-				function cancel() {
+				var distance = destination - start,
+					duration = crossPage ?
+						Math.min(2000, Math.max(1050, 750 + Math.abs(distance) * 0.35)) :
+						Math.min(1800, Math.max(750, 500 + Math.abs(distance) * 0.35)),
+					startTime = null;
 
-					cancelled = true;
-					cleanup();
+				cancelScroll();
 
-				}
-
-				function onInterrupt() {
-
-					cancel();
-
-				}
-
-				function onKeydown(event) {
-
-					if (scrollKeys.indexOf(event.key) !== -1)
-						cancel();
-
-				}
-
-				activeAnimation = { cancel: cancel };
-
-				if (reducedMotionQuery.matches || Math.abs(distance) < 2) {
-					window.scrollTo(0, destination);
-					cleanup();
+				if (reducedMotion.matches) {
+					window.scrollTo({ top: destination, behavior: 'instant' });
+					if (hash === '#team-members')
+						revealTeamMembers();
 					return;
 				}
 
-				window.scrollTo(0, start);
 				interruptEvents.forEach(function(type) {
-					window.addEventListener(type, onInterrupt, { passive: true });
+					window.addEventListener(type, cancelOnInteraction, { passive: true });
 				});
-				window.addEventListener('keydown', onKeydown);
-
-				var startTime = null;
+				window.addEventListener('keydown', cancelOnScrollKey);
 
 				function step(timestamp) {
 
-					if (cancelled)
+					if (!activeFrame)
 						return;
 
 					if (startTime === null)
 						startTime = timestamp;
 
-					var progress = Math.min((timestamp - startTime) / scrollDuration, 1),
-						position = start + distance * easeInOutCubic(progress);
+					var progress = Math.min((timestamp - startTime) / duration, 1),
+						eased = -(Math.cos(Math.PI * progress) - 1) / 2;
 
-					window.scrollTo(0, position);
+					window.scrollTo({ top: start + distance * eased, behavior: 'instant' });
 
 					if (progress < 1)
-						frame = window.requestAnimationFrame(step);
+						activeFrame = window.requestAnimationFrame(step);
 					else {
-						window.scrollTo(0, getDestination(target));
-						cleanup();
+						cancelScroll();
+						if (hash === '#team-members')
+							revealTeamMembers();
 					}
 
 				}
 
-				frame = window.requestAnimationFrame(step);
+				activeFrame = window.requestAnimationFrame(step);
 
 			}
 
-			function closeNavigation() {
+			document.addEventListener('click', function(event) {
 
-				$window.trigger('campag:closeDropdowns');
-				$body.removeClass('is-menu-visible');
+				var anchor = event.target.closest && event.target.closest('a');
 
-			}
-
-			function afterLayoutChange(callback, options) {
-
-				options = options || {};
-				var delay = options.crossPage ? 75 : (reducedMotionQuery.matches ? 0 : 380);
-
-				window.setTimeout(function() {
-					window.requestAnimationFrame(function() {
-						window.requestAnimationFrame(callback);
-					});
-				}, delay);
-
-			}
-
-			function scrollForHash(hash, options) {
-
-				var target = getTarget(hash);
-
-				if (target)
-					animateToTarget(target, options);
-
-			}
-
-			function runInitialScroll() {
-
-				if (!initialHash || initialScrollStarted)
+				if (!anchor)
 					return;
 
-				initialScrollStarted = true;
-				window.scrollTo(0, 0);
-				history.replaceState(history.state, document.title, initialHash);
-				afterLayoutChange(function() {
-					scrollForHash(initialHash, { startY: 0 });
-					if ('scrollRestoration' in history && window.CampAGPreviousScrollRestoration)
-						history.scrollRestoration = window.CampAGPreviousScrollRestoration;
-				}, { crossPage: true });
+				var url = new URL(anchor.href, window.location.href),
+					isAboutDestination = /\/about-us\.html$/.test(url.pathname),
+					isSupportedSection = url.hash === '#history' || url.hash === '#team-members';
 
-			}
-
-			if (initialHash)
-				window.scrollTo(0, 0);
-
-			$window.on('load', runInitialScroll);
-
-			$(document).on('click', 'a[href$="about-us.html#history"], a[href$="about-us.html#team-members"]', function(event) {
-
-				var url = new URL(this.href, window.location.href);
-
-				if (url.pathname !== window.location.pathname)
-					return;
-
-				var target = getTarget(url.hash);
-
-				if (!target)
+				if (url.origin !== window.location.origin || !isAboutDestination || !isSupportedSection)
 					return;
 
 				event.preventDefault();
-				closeNavigation();
+				$body.removeClass('is-menu-visible');
+				$window.trigger('campag:closeDropdowns');
 
-				if (window.location.hash !== url.hash) {
-					isProgrammaticHashChange = true;
-					history.pushState(null, '', url.hash);
-					window.setTimeout(function() { isProgrammaticHashChange = false; }, 0);
+				if (isAboutPage && url.pathname === window.location.pathname) {
+					if (window.location.hash !== url.hash)
+						history.pushState(null, '', url.hash);
+					scrollToSection(url.hash, window.scrollY, false);
+				}
+				else {
+					sessionStorage.setItem(storageKey, url.hash.substring(1));
+					window.location.assign(url.href.split('#')[0]);
 				}
 
-				var navigationToken = ++lastNavigationToken;
-				window.scrollTo(0, 0);
-				afterLayoutChange(function() {
-					if (navigationToken === lastNavigationToken)
-						animateToTarget(target, { startY: 0 });
+			}, true);
+
+			if (isAboutPage) {
+				var pendingSection = sessionStorage.getItem(storageKey);
+				sessionStorage.removeItem(storageKey);
+
+				if (pendingSection === 'history' || pendingSection === 'team-members') {
+					var pendingHash = '#' + pendingSection,
+						startPendingScroll = function() {
+							history.replaceState(history.state, '', pendingHash);
+							scrollToSection(pendingHash, 0, true);
+						};
+
+					if ($body.hasClass('is-preload'))
+						$window.one('campag:preloadComplete', startPendingScroll);
+					else
+						startPendingScroll();
+				}
+			}
+
+		})();
+
+	// Subtle, one-time reveals for standard content pages.
+		(function() {
+
+			if (!('IntersectionObserver' in window) ||
+				window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+				return;
+
+			var page = window.location.pathname.split('/').pop() || 'index.html',
+				selectorsByPage = {
+					'about-us.html': ['#history .inner > section > *', '#cta .inner', '#team-members header.major', '#team-members .features', '#team-members + .wrapper header.major', '#team-members + .wrapper .features'],
+					'press.html': ['.press-section:not(.press-video) > h3', '.press-section > .press-card', '.press-grid', '.press-video'],
+					'reviews.html': ['#three header.major', '#three .features > li'],
+					'get-involved.html': ['#three .inner'],
+					'waitlist.html': ['#main .wrapper.style5 .inner > section']
+				},
+				selectors = selectorsByPage[page];
+
+			if (!selectors)
+				return;
+
+			var elements = document.querySelectorAll(selectors.join(','));
+
+			if (!elements.length)
+				return;
+
+			var observer = new IntersectionObserver(function(entries) {
+				entries.forEach(function(entry) {
+					if (!entry.isIntersecting)
+						return;
+
+					entry.target.classList.add('is-visible');
+					observer.unobserve(entry.target);
 				});
+			}, { rootMargin: '0px 0px -8% 0px', threshold: 0.01 });
 
+			$window.on('campag:teamMembersVisible', function() {
+				document.querySelectorAll('#team-members header.major, #team-members .features').forEach(function(element) {
+					element.classList.add('is-visible');
+					observer.unobserve(element);
+				});
 			});
 
-			$window.on('popstate', function() {
-				if (isProgrammaticHashChange)
-					return;
+			var initialViewportLimit = window.innerHeight * 0.9;
 
-				var hash = getSupportedHash(window.location.hash);
-				if (hash) {
-					var navigationToken = ++lastNavigationToken;
-					window.scrollTo(0, 0);
-					afterLayoutChange(function() {
-						if (navigationToken === lastNavigationToken)
-							scrollForHash(hash, { startY: 0 });
+			elements.forEach(function(element) {
+				element.classList.add('campag-reveal');
+
+				if (element.getBoundingClientRect().top <= initialViewportLimit)
+					element.classList.add('is-visible');
+				else
+					observer.observe(element);
+			});
+
+			// Enable the hidden state only after every element has an active observer.
+			document.documentElement.classList.add('campag-reveal-enabled');
+
+		})();
+
+	// One cohesive load reveal for short-page and initial interactive content.
+		(function() {
+
+			if (window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+				return;
+
+			var page = window.location.pathname.split('/').pop() || 'index.html',
+				selectorsByPage = {
+					'ag-academy.html': '#main .wrapper.style5 .inner > section',
+					'donate.html': '.donation-panel',
+					'get-involved.html': '.flex-container'
+				},
+				selector = selectorsByPage[page],
+				element = selector ? document.querySelector(selector) : null;
+
+			if (!element)
+				return;
+
+			element.classList.add('campag-load-reveal');
+			document.documentElement.classList.add('campag-load-reveal-enabled');
+
+			function revealAfterPreload() {
+				window.setTimeout(function() {
+					window.requestAnimationFrame(function() {
+						element.classList.add('is-visible');
 					});
-				}
-			});
+				}, 100);
+			}
+
+			if ($body.hasClass('is-preload'))
+				$window.one('campag:preloadComplete', revealAfterPreload);
+			else
+				revealAfterPreload();
 
 		})();
 
