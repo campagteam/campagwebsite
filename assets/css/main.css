@@ -72,10 +72,6 @@ input, select, textarea {
 	appearance: none;
 }
 
-
-
-
-
 /* Basic */
 
 	@-ms-viewport {
@@ -4623,3 +4619,201 @@ input, select, textarea {
 		}
 
 	}
+
+/* Camp AG shared visual refresh */
+	:root {
+		--camp-navy: #102a3b;
+		--camp-teal: #168f8a;
+		--camp-orange: #f2a23a;
+		--camp-cream: #faf7ef;
+		--camp-text: #26343b;
+		--camp-white: #ffffff;
+	}
+
+	body.interior-page {
+		background: var(--camp-cream);
+		color: var(--camp-text);
+	}
+
+	.interior-page #main > header {
+		align-items: center;
+		background-attachment: scroll;
+		background-image: linear-gradient(115deg, rgba(16, 42, 59, 0.88), rgba(16, 42, 59, 0.5) 58%, rgba(22, 143, 138, 0.3)), url("../../images/camp-pictures/IMG_5316.JPG");
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		min-height: 28rem;
+		padding: 8rem max(1.5rem, 6vw) 5rem;
+		position: relative;
+	}
+
+	.interior-page #main > header:after {
+		background: var(--camp-orange);
+		border-radius: 1rem;
+		bottom: 3.75rem;
+		content: '';
+		height: 4px;
+		position: absolute;
+		width: 3.5rem;
+	}
+
+	.interior-page #main > header h1,
+	.interior-page #main > header h2 {
+		color: var(--camp-white);
+		font-size: clamp(2.25rem, 5vw, 4.25rem);
+		letter-spacing: 0.04em;
+		line-height: 1.08;
+		margin: 0.3rem 0 0.65rem;
+		text-transform: none;
+	}
+
+	.interior-page #main > header .page-eyebrow,
+	.section-eyebrow {
+		color: var(--camp-orange);
+		font-size: 0.75rem;
+		font-weight: 700;
+		letter-spacing: 0.2em;
+		margin: 0;
+		text-transform: uppercase;
+	}
+
+	.interior-page #main > header .page-summary {
+		color: rgba(255, 255, 255, 0.9);
+		font-size: clamp(1rem, 2vw, 1.2rem);
+		letter-spacing: 0;
+		line-height: 1.6;
+		margin: 0;
+		max-width: 44rem;
+		text-transform: none;
+	}
+
+	.interior-page .wrapper {
+		padding: clamp(4rem, 7vw, 6.5rem) 0;
+	}
+
+	.interior-page .wrapper > .inner {
+		max-width: 72rem;
+		width: calc(100% - 3rem);
+	}
+
+	.interior-page .wrapper.style5 { background: var(--camp-cream); }
+	.interior-page .wrapper.style3 { background: var(--camp-navy); }
+	.interior-page .wrapper.style4 { background: var(--camp-teal); }
+
+	.interior-page .wrapper.style5 h2,
+	.interior-page .wrapper.style5 h3,
+	.interior-page .wrapper.style5 h4 {
+		color: var(--camp-navy);
+	}
+
+	.interior-page header.major h2:after,
+	.interior-page .press-section > h3:after {
+		background: var(--camp-orange);
+		content: '';
+		display: block;
+		height: 3px;
+		margin: 1rem auto 0;
+		width: 3rem;
+	}
+
+	.interior-page p { line-height: 1.8; }
+	.interior-page .wrapper.style5 p { max-width: 48rem; }
+
+	input[type="submit"], input[type="reset"], input[type="button"], button, .button {
+		border-radius: 999px;
+		min-height: 44px;
+		transition: background-color 180ms ease, color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+	}
+
+	input[type="submit"].primary, input[type="reset"].primary, input[type="button"].primary, button.primary, .button.primary {
+		background-color: var(--camp-orange);
+		color: var(--camp-navy) !important;
+	}
+
+	input[type="submit"].primary:hover, input[type="reset"].primary:hover, input[type="button"].primary:hover, button.primary:hover, .button.primary:hover {
+		background-color: #ffc166 !important;
+		transform: translateY(-1px);
+	}
+
+	.button:focus-visible, button:focus-visible, input:focus-visible {
+		outline: 3px solid var(--camp-orange);
+		outline-offset: 3px;
+	}
+
+	.interior-page .features > li,
+	.interior-page .press-card,
+	.interior-page .donation-panel {
+		border-radius: 0.75rem;
+		box-shadow: 0 0.75rem 2.25rem rgba(16, 42, 59, 0.1);
+	}
+
+	.reveal-ready .camp-reveal {
+		opacity: 0;
+		transform: translateY(14px);
+		transition: opacity 520ms ease-out, transform 520ms ease-out;
+	}
+
+	.reveal-ready .camp-reveal.is-revealed {
+		opacity: 1;
+		transform: translateY(0);
+	}
+
+	/* The panel plugin adds this link after load. Keep the hit area large while
+	   excluding it from generic menu-link and button-like presentation. */
+	#menu > a.close,
+	#menu > a.close:hover,
+	#menu > a.close:focus,
+	#menu > a.close:active {
+		background-color: transparent !important;
+		background-image: url("images/close.svg");
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: 1rem 1rem;
+		border: 0;
+		box-shadow: none;
+		height: 44px;
+		opacity: 0.9;
+		padding: 0;
+		right: 0.65rem;
+		top: 0.55rem;
+		width: 44px;
+	}
+
+	#menu > a.close:hover { opacity: 1; }
+	#menu > a.close:focus-visible {
+		outline: 2px solid var(--camp-white);
+		outline-offset: 2px;
+	}
+
+	@media screen and (max-width: 736px) {
+		.interior-page #main > header { min-height: 22rem; padding: 7rem 1.5rem 4.5rem; }
+		.interior-page #main > header:after { bottom: 3.25rem; }
+		.interior-page .wrapper > .inner { width: calc(100% - 2rem); }
+		.interior-page .wrapper { padding: 3.5rem 0; }
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.reveal-ready .camp-reveal,
+		.reveal-ready .camp-reveal.is-revealed {
+			opacity: 1;
+			transform: none;
+			transition: none;
+		}
+		.button, button { transition: none; }
+	}
+
+
+	.about-page #main > header { background-image: linear-gradient(115deg, rgba(16, 42, 59, 0.88), rgba(16, 42, 59, 0.48) 58%, rgba(22, 143, 138, 0.3)), url("../../images/camp-pictures/IMG_5770.JPG"); }
+	.press-page #main > header { background-image: linear-gradient(115deg, rgba(16, 42, 59, 0.88), rgba(16, 42, 59, 0.48) 58%, rgba(22, 143, 138, 0.3)), url("../../images/camp-pictures/IMG_4846.JPG"); }
+	.reviews-page #main > header { background-image: linear-gradient(115deg, rgba(16, 42, 59, 0.88), rgba(16, 42, 59, 0.48) 58%, rgba(22, 143, 138, 0.3)), url("../../images/camp-pictures/IMG_4665.JPG"); }
+	.donate-page #main > header { background-image: linear-gradient(115deg, rgba(16, 42, 59, 0.88), rgba(16, 42, 59, 0.48) 58%, rgba(22, 143, 138, 0.3)), url("../../images/camp-pictures/IMG_4489.JPG"); }
+	.academy-page #main > header { background-image: linear-gradient(115deg, rgba(16, 42, 59, 0.88), rgba(16, 42, 59, 0.48) 58%, rgba(22, 143, 138, 0.3)), url("../../images/camp-pictures/IMG_5180.JPG"); }
+	.involved-page #main > header { background-image: linear-gradient(115deg, rgba(16, 42, 59, 0.88), rgba(16, 42, 59, 0.48) 58%, rgba(22, 143, 138, 0.3)), url("../../images/camp-pictures/IMG_4675.JPG"); }
+
+	.reviews-page .features > li { border: 1px solid rgba(255, 255, 255, 0.12); padding: 2.5rem; }
+	.reviews-page .features > li p { font-size: 1.05rem; line-height: 1.75; }
+	.about-page #history h2 { margin-top: 1.5rem; }
+	.about-page #team-members .features > li { overflow: hidden; }
+	.press-page .press-card { border-color: rgba(16, 42, 59, 0.12); }
+	.press-page .press-card__type { color: var(--camp-teal); }
+	.academy-page .wrapper.style5 section { max-width: 50rem; }
