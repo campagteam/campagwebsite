@@ -158,7 +158,7 @@
 			if (!/(^|\/)about-us\.html$/.test(window.location.pathname))
 				return;
 
-			var duration = 850,
+			var duration = 1200,
 				reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)'),
 				activeFrame = null;
 
@@ -180,9 +180,10 @@
 				if (window.location.hash !== url.hash)
 					history.pushState(null, '', url.hash);
 
-				var start = window.scrollY,
+				var targetAdjustment = url.hash === '#team-members' ? 90 : 0,
+					start = window.scrollY,
 					headerHeight = $header.length ? $header.outerHeight() : 0,
-					destination = Math.max(0, target.getBoundingClientRect().top + start - headerHeight - 12),
+					destination = Math.max(0, target.getBoundingClientRect().top + start - headerHeight - 12 + targetAdjustment),
 					distance = destination - start,
 					startTime = null;
 
