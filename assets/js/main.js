@@ -25,6 +25,7 @@
 		$window.on('load', function() {
 			window.setTimeout(function() {
 				$body.removeClass('is-preload');
+				$window.trigger('campag:preloadComplete');
 			}, 100);
 		});
 
@@ -290,11 +291,18 @@
 			element.classList.add('campag-load-reveal');
 			document.documentElement.classList.add('campag-load-reveal-enabled');
 
-			window.requestAnimationFrame(function() {
-				window.requestAnimationFrame(function() {
-					element.classList.add('is-visible');
-				});
-			});
+			function revealAfterPreload() {
+				window.setTimeout(function() {
+					window.requestAnimationFrame(function() {
+						element.classList.add('is-visible');
+					});
+				}, 100);
+			}
+
+			if ($body.hasClass('is-preload'))
+				$window.one('campag:preloadComplete', revealAfterPreload);
+			else
+				revealAfterPreload();
 
 		})();
 
