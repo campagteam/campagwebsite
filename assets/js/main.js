@@ -418,6 +418,36 @@
 		})();
 
 
+	// Alumni preview reveals. Content is visible by default and only hidden when this script runs.
+		(function() {
+
+			var elements = document.querySelectorAll('.alumni-reveal'),
+				reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+			if (!elements.length)
+				return;
+
+			document.documentElement.classList.add('js');
+
+			if (reducedMotion || !('IntersectionObserver' in window)) {
+				elements.forEach(function(element) { element.classList.add('is-visible'); });
+				return;
+			}
+
+			var observer = new IntersectionObserver(function(entries) {
+				entries.forEach(function(entry) {
+					if (entry.isIntersecting) {
+						entry.target.classList.add('is-visible');
+						observer.unobserve(entry.target);
+					}
+				});
+			}, { threshold: 0.12 });
+
+			elements.forEach(function(element) { observer.observe(element); });
+
+		})();
+
+
 	// Menu.
 		$('#menu')
 			.append('<a href="#menu" class="close"></a>')
