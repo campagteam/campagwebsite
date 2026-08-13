@@ -155,37 +155,19 @@
 
 	// Controlled navigation for the About Us section links.
 		(function() {
-			console.log('[CAMPAG SCROLL DEBUG] About navigation diagnostic version 1');
 
 			var storageKey = 'campagPendingAboutSection',
 				isAboutPage = /(^|\/)about-us\.html$/.test(window.location.pathname),
 				reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)'),
 				activeFrame = null,
 				interruptEvents = ['wheel', 'touchstart', 'pointerdown'],
-				scrollKeys = ['PageUp', 'PageDown', 'ArrowUp', 'ArrowDown', 'Home', 'End', ' '],
-				activeScroll = null;
+				scrollKeys = ['PageUp', 'PageDown', 'ArrowUp', 'ArrowDown', 'Home', 'End', ' '];
 
-			function debug(message, details) {
-
-				console.log('[CAMPAG SCROLL DEBUG] ' + message, details || '');
-
-			}
-
-			function cancelScroll(reason) {
+			function cancelScroll() {
 
 				if (activeFrame)
 					window.cancelAnimationFrame(activeFrame);
-				if (activeScroll)
-					debug('Controlled scroll ended', {
-						reason: reason,
-						expectedDuration: activeScroll.duration,
-						actualElapsed: performance.now() - activeScroll.startedAt,
-						expectedDestination: activeScroll.destination,
-						finalScrollY: window.scrollY,
-						destinationDifference: window.scrollY - activeScroll.destination
-					});
 				activeFrame = null;
-				activeScroll = null;
 				interruptEvents.forEach(function(type) {
 					window.removeEventListener(type, cancelOnInteraction);
 				});
@@ -210,36 +192,6 @@
 
 				$('#team-members header.major, #team-members .features').addClass('is-visible');
 				$window.trigger('campag:teamMembersVisible');
-
-			}
-
-			function logTeamMembersGeometry() {
-
-				var selectors = ['#team-members', '#team-members header.major', '#team-members .features', '#team-members .features > li:first-child', '#team-members .features > li:first-child > a', '#team-members .features > li:first-child img'];
-
-				selectors.forEach(function(selector) {
-					var element = document.querySelector(selector);
-
-					if (!element) {
-						debug('Team Members geometry: element not found', { selector: selector });
-						return;
-					}
-
-					var rect = element.getBoundingClientRect(),
-						styles = window.getComputedStyle(element),
-						details = { selector: selector, top: rect.top, bottom: rect.bottom, viewportHeight: window.innerHeight };
-
-					if (selector === '#team-members header.major' || selector === '#team-members .features') {
-						details.hasRevealClass = element.classList.contains('campag-reveal');
-						details.isVisible = element.classList.contains('is-visible');
-						details.opacity = styles.opacity;
-						details.transform = styles.transform;
-						details.display = styles.display;
-						details.visibility = styles.visibility;
-					}
-
-					debug('Team Members geometry', details);
-				});
 
 			}
 
@@ -268,35 +220,18 @@
 
 				var distance = destination - start,
 					duration = crossPage ?
-						Math.min(3200, Math.max(1800, 1200 + Math.abs(distance) * 0.65)) :
-						Math.min(2800, Math.max(1000, 800 + Math.abs(distance) * 0.7)),
+						Math.min(2600, Math.max(1400, 950 + Math.abs(distance) * 0.5)) :
+						Math.min(2200, Math.max(900, 650 + Math.abs(distance) * 0.5)),
 					startTime = null;
 
-				cancelScroll('replacement-animation');
-				debug('Controlled scroll starting', {
-					pathname: window.location.pathname,
-					hash: hash,
-					navigationType: crossPage ? 'CROSS-PAGE' : 'SAME-PAGE',
-					actualWindowScrollY: window.scrollY,
-					start: start,
-					destination: destination,
-					distance: distance,
-					duration: duration,
-					reducedMotion: reducedMotion.matches,
-					timestamp: performance.now()
-				});
+				cancelScroll();
 
 				if (reducedMotion.matches) {
 					window.scrollTo({ top: destination, behavior: 'instant' });
-					if (hash === '#team-members') {
+					if (hash === '#team-members')
 						revealTeamMembers();
-						logTeamMembersGeometry();
-					}
-					debug('Reduced-motion navigation completed', { expectedDestination: destination, finalScrollY: window.scrollY, destinationDifference: window.scrollY - destination });
 					return;
 				}
-
-				activeScroll = { duration: duration, destination: destination, startedAt: performance.now() };
 
 				interruptEvents.forEach(function(type) {
 					window.addEventListener(type, cancelOnInteraction, { passive: true });
@@ -319,11 +254,9 @@
 					if (progress < 1)
 						activeFrame = window.requestAnimationFrame(step);
 					else {
-						cancelScroll('completed');
-						if (hash === '#team-members') {
+						cancelScroll();
+						if (hash === '#team-members')
 							revealTeamMembers();
-							window.requestAnimationFrame(logTeamMembersGeometry);
-						}
 					}
 
 				}
@@ -347,12 +280,6 @@
 					return;
 
 				event.preventDefault();
-				debug('Click intercepted', {
-					pathname: window.location.pathname,
-					requestedUrl: url.href,
-					targetHash: url.hash,
-					navigationType: isAboutPage && url.pathname === window.location.pathname ? 'SAME-PAGE' : 'CROSS-PAGE'
-				});
 				$body.removeClass('is-menu-visible');
 				$window.trigger('campag:closeDropdowns');
 
@@ -363,7 +290,6 @@
 				}
 				else {
 					sessionStorage.setItem(storageKey, url.hash.substring(1));
-					debug('Pending navigation stored', { key: storageKey, value: url.hash.substring(1), destination: url.href.split('#')[0] });
 					window.location.assign(url.href.split('#')[0]);
 				}
 
@@ -372,12 +298,10 @@
 			if (isAboutPage) {
 				var pendingSection = sessionStorage.getItem(storageKey);
 				sessionStorage.removeItem(storageKey);
-				debug('Pending navigation consumed on About Us', { value: pendingSection, removedImmediately: true, pathname: window.location.pathname });
 
 				if (pendingSection === 'history' || pendingSection === 'team-members') {
 					var pendingHash = '#' + pendingSection,
 						startPendingScroll = function() {
-							debug('Spectral preload complete; starting pending navigation', { pendingSection: pendingSection, actualWindowScrollY: window.scrollY });
 							history.replaceState(history.state, '', pendingHash);
 							scrollToSection(pendingHash, 0, true);
 						};
