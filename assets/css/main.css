@@ -4710,43 +4710,49 @@ input, select, textarea {
 
 
 /* =========================================
-   SHARED CLASS OF 2026 DECORATIVE MOTIF
+   SECTION-WIDE CLASS OF 2026 BACKGROUND
    ========================================= */
 
-/* Make sure actual profile content stays above the numbers */
-.alumni-profile > * {
-    position: relative;
-    z-index: 1;
+.alumni-spotlights {
+    --alumni-parallax-y: 0px;
 }
 
-/* Shared styling for the decorative number fragments */
-.alumni-profile:first-child:after,
-.alumni-profile:nth-child(2):after {
-    font-size: clamp(14em, 25vw, 26em);
+.alumni-spotlights:before,
+.alumni-spotlights:after {
+    font-size: clamp(18em, 34vw, 35em);
     font-weight: 900;
     letter-spacing: -.09em;
     line-height: .7;
     pointer-events: none;
     position: absolute;
+    transform: translate3d(0, var(--alumni-parallax-y), 0);
     white-space: nowrap;
+    will-change: transform;
     z-index: 0;
 }
 
-/* "20" in the empty lower-left area of Jayeun's profile */
-.alumni-profile:first-child:after {
-    content: '20';
+.alumni-spotlights:before {
     color: rgba(46, 56, 66, 0.07);
-    bottom: -.15em;
-    left: -.05em;
+    content: '20';
+    left: -.18em;
+    top: 7%;
 }
 
-/* "26" continues the motif in the next profile */
-.alumni-profile:nth-child(2):after {
-    content: '26';
+.alumni-spotlights:after {
     color: rgba(33, 178, 166, 0.07);
-    top: -.35em;
-    right: -.05em;
-    bottom: auto;
+    content: '26';
+    right: -.16em;
+    top: 58%;
+}
+
+/* Profiles form the foreground; the connecting line remains between them and
+   the section-wide decorative typography. */
+.alumni-profile-list:before {
+    z-index: 1;
+}
+
+.alumni-profile {
+    z-index: 2;
 }
 
 
@@ -5066,10 +5072,10 @@ input, select, textarea {
         grid-template-columns: minmax(0, 11fr) minmax(14em, 9fr);
     }
 
-    /* Slightly smaller background fragments on tablet */
-    .alumni-profile:first-child:after,
-    .alumni-profile:nth-child(2):after {
-        font-size: clamp(10em, 22vw, 18em);
+    /* Keep the section-wide composition restrained on tablet. */
+    .alumni-spotlights:before,
+    .alumni-spotlights:after {
+        font-size: clamp(15em, 30vw, 24em);
     }
 
     .alumni-profile-list:before {
@@ -5121,11 +5127,13 @@ input, select, textarea {
         padding-top: 4.5em;
     }
 
-    /* Side-column whitespace disappears on mobile,
-       so hide the decorative fragments */
-    .alumni-profile:first-child:after,
-    .alumni-profile:nth-child(2):after {
-        display: none;
+    /* Mobile keeps a static, quieter motif without scroll-linked motion. */
+    .alumni-spotlights:before,
+    .alumni-spotlights:after {
+        font-size: 15em;
+        opacity: .65;
+        transform: none;
+        will-change: auto;
     }
 
     .alumni-introduction h2 {
@@ -5215,6 +5223,12 @@ input, select, textarea {
         opacity: 1;
         transform: none;
         transition: none;
+    }
+
+    .alumni-spotlights:before,
+    .alumni-spotlights:after {
+        transform: none;
+        will-change: auto;
     }
 
     .alumni-profile__portrait {
