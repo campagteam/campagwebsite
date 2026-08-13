@@ -220,8 +220,8 @@
 
 				var distance = destination - start,
 					duration = crossPage ?
-						Math.min(2600, Math.max(1400, 950 + Math.abs(distance) * 0.5)) :
-						Math.min(2200, Math.max(900, 650 + Math.abs(distance) * 0.5)),
+						Math.min(2000, Math.max(1050, 750 + Math.abs(distance) * 0.35)) :
+						Math.min(1800, Math.max(750, 500 + Math.abs(distance) * 0.35)),
 					startTime = null;
 
 				cancelScroll();
