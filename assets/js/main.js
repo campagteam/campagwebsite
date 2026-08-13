@@ -153,50 +153,75 @@
 
 		})();
 
-	// Controlled same-page scrolling for the About Us section links.
+	// Controlled navigation for the About Us section links.
 		(function() {
 
-			if (!/(^|\/)about-us\.html$/.test(window.location.pathname))
-				return;
-
-			var duration = 1200,
+			var storageKey = 'campagPendingAboutSection',
+				isAboutPage = /(^|\/)about-us\.html$/.test(window.location.pathname),
 				reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)'),
+				activeFrame = null,
+				interruptEvents = ['wheel', 'touchstart', 'pointerdown'],
+				scrollKeys = ['PageUp', 'PageDown', 'ArrowUp', 'ArrowDown', 'Home', 'End', ' '];
+
+			function cancelScroll() {
+
+				if (activeFrame)
+					window.cancelAnimationFrame(activeFrame);
 				activeFrame = null;
+				interruptEvents.forEach(function(type) {
+					window.removeEventListener(type, cancelScroll);
+				});
+				window.removeEventListener('keydown', cancelOnScrollKey);
 
-			$(document).on('click', 'a[href$="about-us.html#history"], a[href$="about-us.html#team-members"]', function(event) {
+			}
 
-				var url = new URL(this.href, window.location.href);
+			function cancelOnScrollKey(event) {
 
-				if (url.pathname !== window.location.pathname)
-					return;
+				if (scrollKeys.indexOf(event.key) !== -1)
+					cancelScroll();
 
-				var target = document.getElementById(url.hash.substring(1));
+			}
+
+			function revealTeamMembers() {
+
+				$('#team-members header.major, #team-members .features').addClass('is-visible');
+				$window.trigger('campag:teamMembersVisible');
+
+			}
+
+			function scrollToSection(hash, start) {
+
+				var target = document.getElementById(hash.substring(1));
 
 				if (!target)
 					return;
 
-				event.preventDefault();
-				$body.removeClass('is-menu-visible');
-				$window.trigger('campag:closeDropdowns');
-				if (window.location.hash !== url.hash)
-					history.pushState(null, '', url.hash);
-
-				var targetAdjustment = url.hash === '#team-members' ? 90 : 0,
-					start = window.scrollY,
-					headerHeight = $header.length ? $header.outerHeight() : 0,
-					destination = Math.max(0, target.getBoundingClientRect().top + start - headerHeight - 12 + targetAdjustment),
+				var headerHeight = $header.length ? $header.outerHeight() : 0,
+					teamHeader = hash === '#team-members' ? target.querySelector('header.major') : null,
+					targetAdjustment = teamHeader ? Math.min(90, Math.max(0, teamHeader.offsetHeight - 40)) : 0,
+					destination = Math.max(0, target.getBoundingClientRect().top + window.scrollY - headerHeight - 12 + targetAdjustment),
 					distance = destination - start,
+					duration = Math.min(2100, Math.max(900, 700 + Math.abs(distance) * 0.6)),
 					startTime = null;
 
-				if (activeFrame)
-					window.cancelAnimationFrame(activeFrame);
+				cancelScroll();
 
 				if (reducedMotion.matches) {
 					window.scrollTo({ top: destination, behavior: 'instant' });
+					if (hash === '#team-members')
+						revealTeamMembers();
 					return;
 				}
 
+				interruptEvents.forEach(function(type) {
+					window.addEventListener(type, cancelScroll, { passive: true });
+				});
+				window.addEventListener('keydown', cancelOnScrollKey);
+
 				function step(timestamp) {
+
+					if (!activeFrame)
+						return;
 
 					if (startTime === null)
 						startTime = timestamp;
@@ -208,14 +233,58 @@
 
 					if (progress < 1)
 						activeFrame = window.requestAnimationFrame(step);
-					else
-						activeFrame = null;
+					else {
+						cancelScroll();
+						if (hash === '#team-members')
+							revealTeamMembers();
+					}
 
 				}
 
 				activeFrame = window.requestAnimationFrame(step);
 
+			}
+
+			$(document).on('click', 'a[href$="about-us.html#history"], a[href$="about-us.html#team-members"]', function(event) {
+
+				var url = new URL(this.href, window.location.href);
+
+				if (url.origin !== window.location.origin)
+					return;
+
+				event.preventDefault();
+				$body.removeClass('is-menu-visible');
+				$window.trigger('campag:closeDropdowns');
+
+				if (isAboutPage && url.pathname === window.location.pathname) {
+					if (window.location.hash !== url.hash)
+						history.pushState(null, '', url.hash);
+					scrollToSection(url.hash, window.scrollY);
+				}
+				else {
+					sessionStorage.setItem(storageKey, url.hash.substring(1));
+					window.location.assign(url.href.split('#')[0]);
+				}
+
 			});
+
+			if (isAboutPage) {
+				var pendingSection = sessionStorage.getItem(storageKey);
+				sessionStorage.removeItem(storageKey);
+
+				if (pendingSection === 'history' || pendingSection === 'team-members') {
+					var pendingHash = '#' + pendingSection,
+						startPendingScroll = function() {
+							history.replaceState(history.state, '', pendingHash);
+							scrollToSection(pendingHash, 0);
+						};
+
+					if ($body.hasClass('is-preload'))
+						$window.one('campag:preloadComplete', startPendingScroll);
+					else
+						startPendingScroll();
+				}
+			}
 
 		})();
 
@@ -253,6 +322,13 @@
 					observer.unobserve(entry.target);
 				});
 			}, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+
+			$window.on('campag:teamMembersVisible', function() {
+				document.querySelectorAll('#team-members header.major, #team-members .features').forEach(function(element) {
+					element.classList.add('is-visible');
+					observer.unobserve(element);
+				});
+			});
 
 			var initialViewportLimit = window.innerHeight * 0.9;
 
