@@ -152,268 +152,53 @@
 
 		})();
 
-	// About page hash navigation.
+	// Subtle, one-time reveals for standard content pages.
 		(function() {
 
-			var scrollTargetIds = ['history', 'team-members'],
-				isAboutPage = /(^|\/)about-us\.html$/.test(window.location.pathname),
-				reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)'),
-				scrollDuration = 1200,
-				headerGap = 12,
-				activeAnimation = null,
-				isProgrammaticHashChange = false,
-				initialHash = getSupportedHash(window.campAgPendingSection || window.location.hash),
-				initialScrollStarted = false,
-				lastNavigationToken = 0;
-
-			if (!isAboutPage)
+			if (!('IntersectionObserver' in window) ||
+				window.matchMedia('(prefers-reduced-motion: reduce)').matches)
 				return;
 
-			function getSupportedHash(hash) {
+			var page = window.location.pathname.split('/').pop() || 'index.html',
+				selectorsByPage = {
+					'about-us.html': ['#history .inner > section > *', '#cta .inner', '#team-members header.major', '#team-members .features > li', '#team-members + .wrapper header.major', '#team-members + .wrapper .features > li'],
+					'press.html': ['.press-section > h2', '.press-card', '.press-video'],
+					'reviews.html': ['#three header.major', '#three .features > li'],
+					'donate.html': ['.donation-content', '.donation-qr'],
+					'ag-academy.html': ['#main .wrapper.style5 .inner > *', '#main .wrapper.style3 .inner'],
+					'get-involved.html': ['.flex-container > *', '#three .inner'],
+					'register.html': ['#main .wrapper.style5 .inner > section'],
+					'waitlist.html': ['#main .wrapper.style5 .inner > section'],
+					'faq.html': ['#faq header.major', '.faq-item']
+				},
+				selectors = selectorsByPage[page];
 
-				if (!hash)
-					return null;
+			if (!selectors)
+				return;
 
-				var id = hash.charAt(0) === '#' ? hash.substring(1) : hash;
+			var elements = document.querySelectorAll(selectors.join(','));
 
-				return scrollTargetIds.indexOf(id) === -1 ? null : '#' + id;
+			if (!elements.length)
+				return;
 
-			}
-
-			function getTarget(hash) {
-
-				var supportedHash = getSupportedHash(hash);
-
-				return supportedHash ? document.getElementById(supportedHash.substring(1)) : null;
-
-			}
-
-			function getHeaderOffset() {
-
-				if (!$header.length)
-					return 0;
-
-				var rect = $header[0].getBoundingClientRect(),
-					style = window.getComputedStyle($header[0]),
-					isVisible = rect.height > 0 && style.display !== 'none' && style.visibility !== 'hidden',
-					isFixed = style.position === 'fixed' || style.position === 'sticky';
-
-				return isVisible && isFixed ? Math.ceil(rect.height) : 0;
-
-			}
-
-			function getMaxScrollY() {
-
-				return Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-
-			}
-
-			function getDestination(target) {
-
-				var rawTop = target.getBoundingClientRect().top + window.scrollY - getHeaderOffset() - headerGap;
-
-				return Math.min(Math.max(0, rawTop), getMaxScrollY());
-
-			}
-
-			function easeInOutCubic(progress) {
-
-				return progress < 0.5 ? 4 * progress * progress * progress : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-
-			}
-
-			function cancelActiveAnimation() {
-
-				if (activeAnimation)
-					activeAnimation.cancel();
-
-			}
-
-			function animateToTarget(target, options) {
-
-				if (!target)
-					return;
-
-				options = options || {};
-				cancelActiveAnimation();
-
-				var destination = getDestination(target),
-					start = typeof options.startY === 'number' ? options.startY : window.scrollY,
-					distance = destination - start,
-					cancelled = false,
-					frame = null,
-					interruptEvents = ['wheel', 'touchstart', 'pointerdown'],
-					scrollKeys = ['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End', ' '];
-
-				function cleanup() {
-
-					interruptEvents.forEach(function(type) {
-						window.removeEventListener(type, onInterrupt, { passive: true });
-					});
-					window.removeEventListener('keydown', onKeydown);
-					if (frame)
-						window.cancelAnimationFrame(frame);
-					if (activeAnimation && activeAnimation.cancel === cancel)
-						activeAnimation = null;
-
-				}
-
-				function cancel() {
-
-					cancelled = true;
-					cleanup();
-
-				}
-
-				function onInterrupt() {
-
-					cancel();
-
-				}
-
-				function onKeydown(event) {
-
-					if (scrollKeys.indexOf(event.key) !== -1)
-						cancel();
-
-				}
-
-				activeAnimation = { cancel: cancel };
-
-				if (reducedMotionQuery.matches || Math.abs(distance) < 2) {
-					window.scrollTo(0, destination);
-					cleanup();
-					return;
-				}
-
-				window.scrollTo(0, start);
-				interruptEvents.forEach(function(type) {
-					window.addEventListener(type, onInterrupt, { passive: true });
-				});
-				window.addEventListener('keydown', onKeydown);
-
-				var startTime = null;
-
-				function step(timestamp) {
-
-					if (cancelled)
+			var observer = new IntersectionObserver(function(entries) {
+				entries.forEach(function(entry) {
+					if (!entry.isIntersecting)
 						return;
 
-					if (startTime === null)
-						startTime = timestamp;
-
-					var progress = Math.min((timestamp - startTime) / scrollDuration, 1),
-						position = start + distance * easeInOutCubic(progress);
-
-					window.scrollTo(0, position);
-
-					if (progress < 1)
-						frame = window.requestAnimationFrame(step);
-					else {
-						window.scrollTo(0, getDestination(target));
-						cleanup();
-					}
-
-				}
-
-				frame = window.requestAnimationFrame(step);
-
-			}
-
-			function closeNavigation() {
-
-				$window.trigger('campag:closeDropdowns');
-				$body.removeClass('is-menu-visible');
-
-			}
-
-			function afterLayoutChange(callback, options) {
-
-				options = options || {};
-				var delay = options.crossPage ? 75 : (reducedMotionQuery.matches ? 0 : 380);
-
-				window.setTimeout(function() {
-					window.requestAnimationFrame(function() {
-						window.requestAnimationFrame(callback);
-					});
-				}, delay);
-
-			}
-
-			function scrollForHash(hash, options) {
-
-				var target = getTarget(hash);
-
-				if (target)
-					animateToTarget(target, options);
-
-			}
-
-			function runInitialScroll() {
-
-				if (!initialHash || initialScrollStarted)
-					return;
-
-				initialScrollStarted = true;
-				window.scrollTo(0, 0);
-				history.replaceState(history.state, document.title, initialHash);
-				afterLayoutChange(function() {
-					scrollForHash(initialHash, { startY: 0 });
-					if ('scrollRestoration' in history && window.CampAGPreviousScrollRestoration)
-						history.scrollRestoration = window.CampAGPreviousScrollRestoration;
-				}, { crossPage: true });
-
-			}
-
-			if (initialHash)
-				window.scrollTo(0, 0);
-
-			$window.on('load', runInitialScroll);
-
-			$(document).on('click', 'a[href$="about-us.html#history"], a[href$="about-us.html#team-members"]', function(event) {
-
-				var url = new URL(this.href, window.location.href);
-
-				if (url.pathname !== window.location.pathname)
-					return;
-
-				var target = getTarget(url.hash);
-
-				if (!target)
-					return;
-
-				event.preventDefault();
-				closeNavigation();
-
-				if (window.location.hash !== url.hash) {
-					isProgrammaticHashChange = true;
-					history.pushState(null, '', url.hash);
-					window.setTimeout(function() { isProgrammaticHashChange = false; }, 0);
-				}
-
-				var navigationToken = ++lastNavigationToken;
-				window.scrollTo(0, 0);
-				afterLayoutChange(function() {
-					if (navigationToken === lastNavigationToken)
-						animateToTarget(target, { startY: 0 });
+					entry.target.classList.add('is-visible');
+					observer.unobserve(entry.target);
 				});
+			}, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
 
+			elements.forEach(function(element, index) {
+				element.classList.add('campag-reveal');
+				element.style.setProperty('--campag-reveal-delay', (index % 3) * 70 + 'ms');
+				observer.observe(element);
 			});
 
-			$window.on('popstate', function() {
-				if (isProgrammaticHashChange)
-					return;
-
-				var hash = getSupportedHash(window.location.hash);
-				if (hash) {
-					var navigationToken = ++lastNavigationToken;
-					window.scrollTo(0, 0);
-					afterLayoutChange(function() {
-						if (navigationToken === lastNavigationToken)
-							scrollForHash(hash, { startY: 0 });
-					});
-				}
-			});
+			// Enable the hidden state only after every element has an active observer.
+			document.documentElement.classList.add('campag-reveal-enabled');
 
 		})();
 
