@@ -410,59 +410,6 @@
 		})();
 
 
-	// Restrained, section-local parallax for the Alumni Class of 2026 backdrop.
-		(function() {
-
-			var spotlights = document.querySelector('.alumni-spotlights'),
-				reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)'),
-				mobile = window.matchMedia('(max-width: 736px)'),
-				sectionTop = 0,
-				ticking = false,
-				parallaxRate = 0.12;
-
-			if (!spotlights)
-				return;
-
-			function motionDisabled() {
-				return reducedMotion.matches || mobile.matches;
-			}
-
-			function measure() {
-				sectionTop = spotlights.getBoundingClientRect().top + window.pageYOffset;
-			}
-
-			function render() {
-				ticking = false;
-
-				if (motionDisabled()) {
-					spotlights.style.removeProperty('--alumni-parallax-y');
-					return;
-				}
-
-				spotlights.style.setProperty('--alumni-parallax-y', ((window.pageYOffset - sectionTop) * parallaxRate).toFixed(2) + 'px');
-			}
-
-			function requestRender() {
-				if (ticking)
-					return;
-
-				ticking = true;
-				window.requestAnimationFrame(render);
-			}
-
-			function refresh() {
-				measure();
-				requestRender();
-			}
-
-			measure();
-			requestRender();
-			window.addEventListener('scroll', requestRender, { passive: true });
-			window.addEventListener('resize', refresh, { passive: true });
-			reducedMotion.addEventListener('change', requestRender);
-			mobile.addEventListener('change', refresh);
-
-		})();
 
 
 	// Alumni preview reveals. Content is visible by default and only hidden when this script runs.
