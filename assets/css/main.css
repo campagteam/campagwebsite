@@ -4657,8 +4657,7 @@ input, select, textarea {
 .alumni-hero__class span { color: #75ddd4; font-size: .28em; letter-spacing: .3em; margin-bottom: .8em; }
 .alumni-hero__spark { border: 1px solid rgba(244,185,66,.65); height: 2em; position: absolute; transform: rotate(45deg); width: 2em; }
 .alumni-hero__spark--one { right: 12%; top: 17%; }.alumni-hero__spark--two { bottom: 18%; height: .8em; left: 53%; width: .8em; }
-.alumni-introduction { background: #fff; padding: 5em 0 5.5em; text-align: center; }
-.alumni-introduction .alumni-container { max-width: 52em; }.alumni-section-number { color: #ed4933; }.alumni-introduction h2 { color: #2e3842; font-size: 2.6em; margin-bottom: .65em; }.alumni-introduction p:last-child { color: #625c63; font-size: 1.15em; line-height: 1.9; }
+.alumni-section-number { color: #ed4933; }
 .alumni-spotlights {
     background: #f5f2ec;
     isolation: isolate;
@@ -4672,7 +4671,7 @@ input, select, textarea {
 }
 
 .alumni-profile-list {
-    padding-bottom: 8em;
+    padding-bottom: 5em;
     padding-top: 6em;
 }
 
@@ -4959,6 +4958,24 @@ input, select, textarea {
     max-width: 48em;
 }
 
+.alumni-legacy__introduction {
+    border-bottom: 1px solid rgba(255,255,255,.2);
+    margin-bottom: 4.5em;
+    max-width: 52em;
+    padding-bottom: 4.5em;
+}
+
+.alumni-legacy__introduction h2 {
+    font-size: 2.6em;
+    margin-bottom: .65em;
+}
+
+.alumni-legacy__introduction p:last-child {
+    color: rgba(255,255,255,.76);
+    font-size: 1.15em;
+    line-height: 1.9;
+}
+
 .alumni-legacy .alumni-eyebrow {
     color: #75ddd4;
 }
@@ -5118,13 +5135,8 @@ input, select, textarea {
         top: .6em;
     }
 
-    .alumni-introduction {
-        padding-bottom: 4.25em;
-        padding-top: 4.25em;
-    }
-
     .alumni-profile-list {
-        padding-bottom: 5em;
+        padding-bottom: 3.5em;
         padding-top: 4.5em;
     }
 
@@ -5151,7 +5163,7 @@ input, select, textarea {
         display: none;
     }
 
-    .alumni-introduction h2 {
+    .alumni-legacy__introduction h2 {
         font-size: 2em;
     }
 
@@ -5195,6 +5207,11 @@ input, select, textarea {
 
     .alumni-legacy {
         padding: 6em 0 5em;
+    }
+
+    .alumni-legacy__introduction {
+        margin-bottom: 3.5em;
+        padding-bottom: 3.5em;
     }
 
     .alumni-stats {
